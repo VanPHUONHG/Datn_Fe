@@ -4,6 +4,7 @@ import { router } from './router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // CSS của Toastify
 import './App.css';
+import ChatBot from 'components/chatbot/Chatbot';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         pauseOnHover
         theme="colored"
       />
+      <ChatBot />
     </>
   );
 }
