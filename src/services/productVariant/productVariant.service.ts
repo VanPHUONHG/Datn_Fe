@@ -29,3 +29,19 @@ export const getVariantById = async (id: string) => {
     throw error;
   }
 };
+
+export const getAllProductVariants = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/productvariants`, {
+      params: {
+        isDeleted: false,
+        page: 1,
+        limit: 1000,
+      },
+    });
+    return response.data.variants;
+  } catch (error) {
+    console.error("Error fetching all product variants:", error);
+    throw error;
+  }
+};
