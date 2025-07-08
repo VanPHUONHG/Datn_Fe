@@ -20,6 +20,7 @@ import CheckPaymentVNPay from "pages/Checkout/CheckPaymentVNPay";
 import UserCoupon from "pages/User/UserCoupon";
 import ProfileEdit from "pages/User/ProfileEdit";
 import ChangePassword from "pages/User/ChangePassword";
+import TopSellingProduct from "pages/TopSellingProduct/TopSellingProduct";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
         element: <BlogDetail />,
       }
       ,
+      {
+        path: "top-selling-product",
+        element: <TopSellingProduct />,
+      },
       {
         path: "compare",
         element: <Compare />,

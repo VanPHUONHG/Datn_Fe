@@ -407,7 +407,7 @@ const Header = () => {
             <Link to="/" className="hover:text-green-600">Trang chủ</Link>
             <Link to="/products" className="hover:text-green-600">Sản phẩm</Link>
             <Link to="/blog" className="hover:text-green-600">Tin tức</Link>
-            <Link to="/sanpham_banchay" className="hover:text-green-600">Bán chạy nhất</Link>
+            <Link to="/top-selling-product" className="hover:text-green-600">Bán chạy nhất</Link>
             <Link to="/lien_he" className="hover:text-green-600">Liên hệ</Link>
           </nav>
 

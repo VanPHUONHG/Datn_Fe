@@ -26,9 +26,11 @@ const CheckPaymentVNPay = () => {
                     const stored = localStorage.getItem("pendingOrder");
                     if (stored) {
                         const parsedOrder = JSON.parse(stored);
-    console.log("🔍 Dữ liệu đơn hàng lưu từ localStorage:", parsedOrder);
-    console.log("💳 Phương thức thanh toán (expected: vnpay):", parsedOrder.paymentMethod);
+     const userData = localStorage.getItem("user");
+  if (!userData) return; 
 
+  const user = JSON.parse(userData);
+  parsedOrder.user = user._id;
                         try {
                             const created = await createOrder(parsedOrder);
                             console.log("Đơn hàng đã tạo:", created);

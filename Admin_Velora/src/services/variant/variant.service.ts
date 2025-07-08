@@ -95,3 +95,23 @@ export const forceDeleteVariant = async (id: string) => {
     throw error;
   }
 };
+
+
+
+export const getVariantsByProduct = async (params: {
+  product_id: string;
+  color?: string;
+  page?: number;
+  limit?: number;
+  isDeleted?: boolean;
+}) => {
+  try {
+    const res = await axios.get(`${API_URL}/productvariants`, {
+      params,
+    });
+    return res.data; // { variants, pagination }
+  } catch (error) {
+    console.error("Lỗi khi lấy biến thể theo sản phẩm:", error);
+    throw error;
+  }
+};

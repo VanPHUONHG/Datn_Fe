@@ -35,10 +35,10 @@ const VariantDelete = () => {
       await forceDeleteVariant(id);
       message.success("Xóa vĩnh viễn biến thể thành công");
       fetchDeletedVariants(page);
-    } catch (error) {
-      console.error("Lỗi khi xóa vĩnh viễn:", error);
-      message.error("Xóa vĩnh viễn thất bại");
-    }
+    } catch (error: any) {
+  console.error("Lỗi khi xóa vĩnh viễn:", error.response?.data || error.message);
+  message.error(error.response?.data?.message || "Xóa vĩnh viễn thất bại");
+}
   };
 
   const handleRestore = async (id: string) => {

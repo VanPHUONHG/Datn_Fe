@@ -23,9 +23,13 @@ export const createProduct = async (productData: unknown) => {
   try {
     const res = await axios.post(`${API_URL}/products`, productData);
     return res.data; 
-  } catch (error) {
-    console.log(error);
+  }catch (error) {
+  if (axios.isAxiosError(error)) {
+    throw error;
+  } else {
+    throw new Error("Đã có lỗi xảy ra khi tạo sản phẩm");
   }
+}
 };
 
 export const deleteProductById = async(id: string)=>{

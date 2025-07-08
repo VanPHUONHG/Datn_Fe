@@ -20,6 +20,11 @@ const VariantEdit = () => {
   const nav = useNavigate();
   const { id } = useParams<{ id: string }>();
 
+const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+const [thumbnailUrlInput, setThumbnailUrlInput] = useState("");
+const [imageFiles, setImageFiles] = useState<File[]>([]);
+const [imageUrlsInput, setImageUrlsInput] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -39,6 +44,18 @@ const VariantEdit = () => {
       stock_quantity: 0,
     },
   });
+const uploadImage = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("http://localhost:8888/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+  return data.url;
+};
 
   // Fetch variant + products
   useEffect(() => {
@@ -74,25 +91,53 @@ const VariantEdit = () => {
 
     if (id) fetchData();
   }, [id, reset]);
+  
+const onSubmit = async (data: VariantFormInput) => {
+  let thumbnailUrl = data.image;
+  let images: string[] = [];
 
-  const onSubmit = async (data: VariantFormInput) => {
-    const updatedData = {
-      ...data,
-      images: data.images
+  try {
+    // Upload thumbnail nếu có file mới
+    if (thumbnailFile) {
+      thumbnailUrl = await uploadImage(thumbnailFile);
+    } else if (thumbnailUrlInput.trim()) {
+      // Nếu người dùng nhập link thủ công
+      thumbnailUrl = thumbnailUrlInput.trim();
+    }
+
+    // Xử lý ảnh phụ
+    if (imageFiles.length > 0) {
+      // Nếu có file mới → chỉ dùng ảnh mới
+      images = await Promise.all(imageFiles.map(uploadImage));
+    } else if (imageUrlsInput.trim()) {
+      // Nếu không upload file, dùng ảnh từ input textarea (nhập link)
+      images = imageUrlsInput
         .split(",")
         .map((url) => url.trim())
-        .filter((url) => url.startsWith("http")),
+        .filter((url) => url.startsWith("http"));
+    } else {
+      // Nếu không upload gì cả, giữ nguyên ảnh cũ
+      images = data.images
+        .split(",")
+        .map((url) => url.trim())
+        .filter((url) => url.startsWith("http"));
+    }
+
+    const updatedData = {
+      ...data,
+      image: thumbnailUrl,
+      images,
     };
 
-    try {
-      await updateVariant(id as string, updatedData);
-      message.success("Cập nhật biến thể thành công");
-      nav("/admin/variant-list");
-    } catch (error) {
-      console.error("Lỗi khi cập nhật:", error);
-      message.error("Đã xảy ra lỗi khi cập nhật biến thể");
-    }
-  };
+    await updateVariant(id as string, updatedData);
+    message.success("Cập nhật biến thể thành công");
+    nav("/admin/variant-list");
+  } catch (error) {
+    console.error("Lỗi khi cập nhật:", error);
+    message.error("Đã xảy ra lỗi khi cập nhật biến thể");
+  }
+};
+
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-xl">
@@ -138,14 +183,57 @@ const VariantEdit = () => {
           <label className="block font-semibold mb-1">Ảnh đại diện</label>
           <input {...register("image", { required: true })} className="w-full border rounded p-2" />
           {errors.image && <p className="text-red-500 text-sm">Không được để trống</p>}
+           <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
+  />
         </div>
-
+{thumbnailFile && (
+  <img
+    src={URL.createObjectURL(thumbnailFile)}
+    alt="Preview thumbnail"
+    className="mt-2 w-24 h-24 object-cover border rounded"
+  />
+)}
         {/* Danh sách ảnh */}
         <div className="md:col-span-2">
           <label className="block font-semibold mb-1">Danh sách ảnh (phân cách bằng dấu phẩy)</label>
           <textarea {...register("images")} className="w-full border rounded p-2 h-24 resize-none" />
+            <input
+    type="file"
+    accept="image/*"
+    multiple
+    onChange={(e) => {
+      const files = Array.from(e.target.files || []);
+      setImageFiles((prev) => [...prev, ...files]);
+    }}
+  />
         </div>
-
+{imageFiles.length > 0 && (
+  <div className="flex gap-2 mt-2 flex-wrap">
+    {imageFiles.map((file, idx) => (
+      <div key={idx} className="relative">
+        <img
+          src={URL.createObjectURL(file)}
+          alt={`Preview ${idx}`}
+          className="w-20 h-20 object-cover border rounded"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            const newFiles = [...imageFiles];
+            newFiles.splice(idx, 1);
+            setImageFiles(newFiles);
+          }}
+          className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 hover:bg-red-800"
+        >
+          ×
+        </button>
+      </div>
+    ))}
+  </div>
+)}
         {/* SKU */}
         <div>
           <label className="block font-semibold mb-1">SKU</label>
