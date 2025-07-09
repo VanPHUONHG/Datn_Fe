@@ -40,6 +40,10 @@ const Dashboard = () => {
   const [revenueData, setRevenueData] = useState<RevenueItem[]>([]);
   const [loadingRevenue, setLoadingRevenue] = useState(false);
 
+  const [overviewFilter, setOverviewFilter] = useState<FilterType>("7ngay");
+const [revenueFilter, setRevenueFilter] = useState<FilterType>("7ngay");
+const [topProductFilter, setTopProductFilter] = useState<FilterType>("7ngay");
+
   const [topProducts, setTopProducts] = useState<
   { name: string; sold: number; price: number; totalRevenue?: number }[]
 >([]);
@@ -48,14 +52,15 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchOverview = async () => {
       try {
-        const data = await getDashboardOverview();
+            const range = overviewFilter === "7ngay" ? 7 : overviewFilter === "14ngay" ? 14 : 30;
+        const data = await getDashboardOverview(range);
         setOverviewData(data);
       } catch (err) {
         console.error("Lỗi khi fetch dashboard overview:", err);
       }
     };
     fetchOverview();
-  }, []);
+  }, [overviewFilter]);
 
   // Fetch revenue chart
   useEffect(() => {
@@ -82,17 +87,28 @@ const Dashboard = () => {
   }, [filter]);
 
 
-  useEffect(() => {
+ useEffect(() => {
   const fetchTopProducts = async () => {
     try {
-      const products = await getTopSellingProducts(5);
+      const range =
+        topProductFilter === "7ngay" ? "week" : topProductFilter === "14ngay" ? "2week" : "month";
+
+      // Lưu ý: backend chỉ xử lý "day", "week", "month"
+      // Nên bạn cần chuẩn hóa lại
+      const rangeConverted = topProductFilter === "7ngay"
+        ? "week"
+        : topProductFilter === "14ngay"
+        ? "week" // fallback
+        : "month";
+
+      const products = await getTopSellingProducts(5, rangeConverted);
       setTopProducts(products);
     } catch (error) {
       console.error("Lỗi khi lấy top sản phẩm:", error);
     }
   };
   fetchTopProducts();
-}, []);
+}, [topProductFilter]);
 
 const totalRevenue = useMemo(() => {
   if (overviewData && Number(overviewData.totalRevenue) > 0) {
@@ -145,7 +161,19 @@ const totalRevenue = useMemo(() => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 font-sans">
+      
       <h1 className="text-3xl font-bold text-gray-800 mb-10">Bảng điều khiển quản trị</h1>
+<div className="flex justify-end mb-4">
+  <select
+    value={overviewFilter}
+    onChange={(e) => setOverviewFilter(e.target.value as FilterType)}
+    className="border rounded px-3 py-1 text-sm"
+  >
+    <option value="7ngay">Tổng quan 7 ngày</option>
+    <option value="14ngay">Tổng quan 14 ngày</option>
+    <option value="30ngay">Tổng quan 30 ngày</option>
+  </select>
+</div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -224,6 +252,18 @@ const totalRevenue = useMemo(() => {
       {/* Top Products */}
    <div className="bg-white rounded-xl shadow p-6">
   <h2 className="text-2xl font-semibold text-gray-800 mb-4">Top sản phẩm bán chạy</h2>
+  <div className="flex justify-end mb-2">
+  <select
+    value={topProductFilter}
+    onChange={(e) => setTopProductFilter(e.target.value as FilterType)}
+    className="border rounded px-3 py-1 text-sm"
+  >
+    <option value="7ngay">Top 7 ngày</option>
+    <option value="14ngay">Top 14 ngày</option>
+    <option value="30ngay">Top 30 ngày</option>
+  </select>
+</div>
+
   <table className="min-w-full text-sm text-left">
     <thead className="bg-gray-100 text-gray-700 font-semibold text-sm">
       <tr>

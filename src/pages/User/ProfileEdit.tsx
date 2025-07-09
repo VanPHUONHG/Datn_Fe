@@ -42,9 +42,13 @@ const ProfileEdit = () => {
       localStorage.setItem("user", JSON.stringify(updated));
 
       navigate("/user/profile");
-    } catch {
+    }  catch (error: any) {
+    if (error?.response?.data?.message) {
+      message.error(error.response.data.message); // ✅ Hiển thị lỗi cụ thể từ server
+    } else {
       message.error("Cập nhật thất bại");
     }
+  }
   };
 
   if (loading) return <Spin tip="Đang tải..." className="flex justify-center p-10" />;

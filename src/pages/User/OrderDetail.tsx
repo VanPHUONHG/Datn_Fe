@@ -19,7 +19,7 @@ const OrderDetail = () => {
             case 'shipped':
                 return 'Đang giao hàng';
             case 'completed':
-                return 'Đã hoàn thành';
+                return 'Hoàn thành';
             case 'cancelled':
                 return 'Đã hủy';
             default:
@@ -170,32 +170,34 @@ const OrderDetail = () => {
 
 
                     </div>
-                    <div className="w-full col-span-full  rounded-md p-4 bg-white space-y-2 text-sm">
-                        {/* Thành tiền */}
-                        <div className="flex justify-between py-1 border-b border-gray-200">
-                            <div className="font-semibold">Thành tiền:</div>
-                            <div>{order.totalAmount.toLocaleString()} VND</div>
-                        </div>
+                    <div className="w-full col-span-full rounded-md p-4 bg-white space-y-2 text-sm">
+  {/* Thành tiền */}
+  <div className="flex justify-between py-1 border-b border-gray-200">
+    <div className="font-semibold">Thành tiền:</div>
+    <div>{order.totalAmount.toLocaleString()} VND</div>
+  </div>
 
-                        {/* Vận chuyển */}
-                        <div className="flex justify-between py-1 border-b border-gray-200">
-                            <div className="font-semibold">Vận chuyển</div>
-                            <div>32,000 VND</div>
-                        </div>
+  {/* Vận chuyển */}
+  <div className="flex justify-between py-1 border-b border-gray-200">
+    <div className="font-semibold">Vận chuyển:</div>
+    <div>32,000 VND</div>
+  </div>
 
-                        {/* Tổng */}
-                        <div className="flex justify-between py-1 border-b border-gray-200">
-                            <div className="font-semibold text-base">Total:</div>
-                            <div className="text-base font-semibold">{order.finalAmount.toLocaleString()} VND</div>
-                        </div>
+  {/* Mã giảm giá nếu có */}
+  {order.discountAmount > 0 && order.coupon?.code && (
+    <div className="flex justify-between py-1 border-b border-gray-200">
+      <div className="font-semibold">Mã giảm giá ({order.coupon.code}):</div>
+      <div className="text-red-500 font-semibold">- {order.discountAmount.toLocaleString()} VND</div>
+    </div>
+  )}
 
-                        {/* Mã giảm giá nếu có */}
-                        {order.discountAmount > 0 && order.coupon?.code && (
-                            <div className="text-sm text-red-500 italic mt-1 text-right">
-                                Đã áp mã giảm giá <strong>{order.coupon.code}</strong>, được giảm <strong>{order.discountAmount.toLocaleString()}đ</strong>
-                            </div>
-                        )}
-                    </div>
+  {/* Tổng cộng */}
+  <div className="flex justify-between py-1 border-b border-gray-200">
+    <div className="font-semibold text-base">Total:</div>
+    <div className="text-base font-semibold">{order.finalAmount.toLocaleString()} VND</div>
+  </div>
+</div>
+
 
 
 

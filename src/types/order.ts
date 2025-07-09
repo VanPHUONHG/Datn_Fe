@@ -40,3 +40,4 @@ export interface IOrder {
     createdAt: string;
     updatedAt: string;
 }
+export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'completed' | 'cancelled';
