@@ -95,6 +95,15 @@ const AdminSidebar = () => {
       ],
     },
     {
+      key: "sub16",
+      label: "Quản lý bình luận",
+      icon: <FolderOutlined />,
+      children: [
+        { key: "reviewlist", label: "Danh sách bình luận" },
+      ],
+    },
+
+    {
       type: 'divider',
     },
   ];
@@ -148,6 +157,9 @@ const AdminSidebar = () => {
         break;
       case "blog-category-deleted":
         navigate("/admin/blog-category-deleted");
+        break;
+      case "reviewlist":
+        navigate("/admin/review-list");
         break;
 
 

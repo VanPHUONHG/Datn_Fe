@@ -42,6 +42,7 @@ import UserDetail from "pages/Account/UserDetail";
 
 import AdminLogin from "pages/Login/Login";
 import RequireAdmin from "pages/Login/RequireAdmin";
+import ReviewList from "pages/Review/ReviewList";
 
 export const router = createBrowserRouter([
   {
@@ -107,6 +108,10 @@ export const router = createBrowserRouter([
       // User
       { path: "user-list", element: <UserList /> },
       { path: "user-detail/:id", element: <UserDetail /> },
+
+      // comment
+      { path: "review-list", element: <ReviewList /> },
+
     ],
   },
 ]);
