@@ -10,6 +10,7 @@ import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { addToCart, type CartPayload } from "services/cart/cart.service";
 import type { IUser } from "types/user";
 import type { ICartItem } from "types/cart";
+import ProductReviewSection from "./ProductReviewSection";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -268,10 +269,10 @@ const ProductDetail = () => {
                     onClick={() => {
                       const sameColorVariants = variants.filter(v => v.color === variant.color);
                       const allImages = sameColorVariants.flatMap(v => v.images?.length ? v.images : [v.image]);
-     const uniqueImages = Array.from(  new Set(
-    allImages.filter((img) => !!img && img !== variant.image) // ❌ Loại ảnh chính
-  ));
-                        setVariantImages(uniqueImages);
+                      const uniqueImages = Array.from(new Set(
+                        allImages.filter((img) => !!img && img !== variant.image) // ❌ Loại ảnh chính
+                      ));
+                      setVariantImages(uniqueImages);
                       setSelectedColor(variant.color);
                       setCurrentImage(uniqueImages[0]);
 
@@ -406,7 +407,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-
+      <ProductReviewSection />
       {/* Sản phẩm liên quan */}
       <div className="mt-12">
         <h2 className="text-xl font-semibold mb-4 text-gray-800">Có thể bạn cũng thích</h2>
