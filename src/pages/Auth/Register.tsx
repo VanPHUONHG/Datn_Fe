@@ -1,6 +1,6 @@
-// src/pages/Register.tsx
+
 import React, { useState } from 'react';
-import { signup } from '../api/authAPI';
+import { signup } from '../../api/authAPI';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 
@@ -25,7 +25,7 @@ const Register: React.FC = () => {
       const res = await signup(form);
        message.success('Đăng ký thành công!');
       console.log(res.data);
-      navigate('/login'); // Chuyển hướng sau khi đăng ký thành công
+      navigate('/login'); 
     } catch (err: any) {
       message.error(err.response?.data?.message || 'Lỗi đăng ký');
     }

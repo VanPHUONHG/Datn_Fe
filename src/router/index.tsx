@@ -5,8 +5,8 @@ import Cart from "pages/Cart/Cart";
 import Checkout from "pages/Checkout/Checkout";
 import Wishlist from "pages/Wishlist/Wishlist";
 import ProductDetail from "pages/Product_detail/Product_detail";
-import Register from "pages/Register";
-import Login from "pages/Login";
+import Register from "pages/Auth/Register";
+import Login from "pages/Auth/Login";
 import ProductInCategory from "pages/ProductInCategory/ProductInCategory";
 import Blog from "pages/Blog/Blog";
 import BlogDetail from "pages/blogDetail/blogDetail";
@@ -21,6 +21,7 @@ import UserCoupon from "pages/User/UserCoupon";
 import ProfileEdit from "pages/User/ProfileEdit";
 import ChangePassword from "pages/User/ChangePassword";
 import TopSellingProduct from "pages/TopSellingProduct/TopSellingProduct";
+import ForgotPassword from "pages/Auth/ForgotPassword";
 
 export const router = createBrowserRouter([
   {
@@ -84,6 +85,10 @@ export const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+       {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
       },
       {
         path: "user",

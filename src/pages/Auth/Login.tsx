@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { login } from '../api/authAPI';
-import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/authAPI';
+import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 
 const Login: React.FC = () => {
@@ -57,6 +57,9 @@ const Login: React.FC = () => {
       >
         Đăng nhập
       </button>
+      <p className="text-sm text-center text-blue-600 hover:underline mt-2">
+        <Link to="/forgot-password">Quên mật khẩu?</Link>
+      </p>
     </form>
   );
 };
