@@ -42,6 +42,9 @@ import UserDetail from "pages/Account/UserDetail";
 
 import AdminLogin from "pages/Login/Login";
 import RequireAdmin from "pages/Login/RequireAdmin";
+import BannerList from "pages/Banner/BannerList";
+import BannerAdd from "pages/Banner/BannerAdd";
+import BannerEdit from "pages/Banner/BannerEdit";
 
 export const router = createBrowserRouter([
   {
@@ -107,6 +110,11 @@ export const router = createBrowserRouter([
       // User
       { path: "user-list", element: <UserList /> },
       { path: "user-detail/:id", element: <UserDetail /> },
+
+        //Banner
+        { path: "banner-list", element: <BannerList /> },
+      { path: "banner-add", element: <BannerAdd /> },
+            { path: "banner-edit/:id", element: <BannerEdit /> },
     ],
   },
 ]);
