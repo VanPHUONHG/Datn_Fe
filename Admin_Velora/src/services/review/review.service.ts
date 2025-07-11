@@ -34,3 +34,30 @@ export const deleteReview = async (review_id: string) => {
 
   return res.data;
 };
+
+
+export const replyToReview = async ({
+  product_id,
+  comment,
+  parent_id,
+}: {
+  product_id: string;
+  comment: string;
+  parent_id: string;
+}) => {
+  const token = localStorage.getItem("token_admin");
+  if (!token) throw new Error("Không tìm thấy token admin");
+
+  const res = await axios.post(
+    `${REVIEW_ENDPOINT}/addreview/${product_id}`,
+    { comment, parent_id },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data.review;
+};
+
