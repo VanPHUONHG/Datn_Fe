@@ -40,17 +40,7 @@ const CouponDelete = () => {
     }
   };
 
-  const handleSoftDelete = async (id: string) => {
-    try {
-      await updateCoupon(id, { is_active: false });
-      message.success("Xoá lại mã khuyến mãi thành công");
-      // Vẫn xoá khỏi danh sách vì đã đang ở trang "đã xoá"
-      setDeletedCoupons((prev) => prev.filter((coupon) => coupon._id !== id));
-    } catch (error) {
-      console.error("Lỗi khi xoá lại mã:", error);
-      message.error("Xoá thất bại");
-    }
-  };
+ 
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
@@ -127,20 +117,7 @@ const CouponDelete = () => {
                   </td>
                   <td className="border px-4 py-2">
                     <div className="flex gap-2 justify-center">
-                      <Popconfirm
-                        title="Bạn có chắc muốn xoá lại mã này?"
-                        onConfirm={() => handleSoftDelete(coupon._id)}
-                        okText="Có"
-                        cancelText="Không"
-                      >
-                        <Button
-                          danger
-                          size="small"
-                          icon={<DeleteOutlined />}
-                        >
-                          Xoá lại
-                        </Button>
-                      </Popconfirm>
+                     
                       <Popconfirm
                         title="Bạn có muốn khôi phục mã này không?"
                         onConfirm={() => handleRestore(coupon._id)}

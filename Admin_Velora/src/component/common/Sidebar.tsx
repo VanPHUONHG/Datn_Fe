@@ -6,6 +6,7 @@ import {
   FolderOutlined,
   AppstoreAddOutlined,
   GiftOutlined,
+  PictureOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
@@ -66,6 +67,15 @@ const AdminSidebar = () => {
       children: [
         { key: 'categorylist', label: 'Danh sách danh mục' },
         { key: 'addcategory', label: 'Thêm mới danh mục' },
+      ],
+    },
+       {
+      key: 'sub8',
+      label: 'Quản lý banner',
+      icon: <PictureOutlined />,
+      children: [
+        { key: 'bannerlist', label: 'Danh sách banner' },
+        { key: 'addbanner', label: 'Thêm mới banner' },
       ],
     },
     {
@@ -161,6 +171,12 @@ const AdminSidebar = () => {
         navigate("/admin/review-list");
         break;
 
+ case "addbanner":
+        navigate("/admin/banner-add");
+        break;
+case "bannerlist":
+        navigate("/admin/banner-list");
+        break;
 
       default:
         navigate('');
