@@ -5,6 +5,8 @@ export interface User {
   full_name: string;
   phone: string;
   address: string;
+  email?: string;     
+  status?: string;   
   role: "customer" | "admin";
   created_at: string;
   updated_at: string;

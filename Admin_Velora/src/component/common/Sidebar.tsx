@@ -73,8 +73,7 @@ const AdminSidebar = () => {
       label: 'Quản lý tài khoản',
       icon: <UserOutlined />,
       children: [
-        { key: 'userlist', label: 'Danh sách người dùng' },
-        { key: 'adminList', label: 'Danh sách admin' },
+        { key: 'userlist', label: 'Danh sách người dùng' }
       ],
     },
     {
