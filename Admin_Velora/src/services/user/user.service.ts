@@ -4,7 +4,7 @@ import type { User } from "types/user";
 const API_URL = import.meta.env.VITE_API_URL;
 const USER_ENDPOINT = `${API_URL}/users`;
 
-// Lấy danh sách tất cả người dùng (chỉ admin mới gọi được)
+// ✅ Lấy danh sách tất cả người dùng (chỉ admin)
 export const getAllUsers = async (): Promise<User[]> => {
   const token = localStorage.getItem("token_admin");
 
@@ -13,12 +13,14 @@ export const getAllUsers = async (): Promise<User[]> => {
       Authorization: `Bearer ${token}`,
     },
   });
-   return res.data.users as User[];
+
+  return res.data.users as User[];
 };
 
-/// Lấy thông tin chi tiết 1 user theo ID (dành cho admin)
+// ✅ Lấy thông tin chi tiết người dùng theo ID (admin hoặc chính họ)
 export const getUserById = async (id: string): Promise<User> => {
-  const token = localStorage.getItem("token_admin"); 
+  const token =
+    localStorage.getItem("token_admin") || localStorage.getItem("token_user");
 
   const res = await axios.get(`${USER_ENDPOINT}/${id}`, {
     headers: {
@@ -26,6 +28,46 @@ export const getUserById = async (id: string): Promise<User> => {
     },
   });
 
-  return res.data.user as User; 
+  return res.data.user as User;
+};
+
+// ✅ Cập nhật thông tin người dùng (admin hoặc chính họ)
+export const updateUser = async (
+  id: string,
+  data: Partial<
+    Omit<User, "_id" | "role" | "created_at" | "updated_at" | "status">
+  >
+): Promise<User> => {
+  const token =
+    localStorage.getItem("token_admin") || localStorage.getItem("token_user");
+
+  const res = await axios.patch(`${USER_ENDPOINT}/update/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data.user as User;
+};
+
+
+// ✅ Cập nhật trạng thái người dùng (chỉ admin)
+export const updateUserStatus = async (
+  id: string,
+  status: "active" | "banned"
+): Promise<User> => {
+  const token = localStorage.getItem("token_admin");
+
+  const res = await axios.patch(
+    `${USER_ENDPOINT}/updateStatus/${id}`,
+    { status },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data.user as User;
 };
 

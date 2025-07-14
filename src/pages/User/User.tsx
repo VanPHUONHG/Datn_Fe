@@ -52,7 +52,7 @@ const User = () => {
                   <span className="font-semibold truncate max-w-[130px]">{user.full_name}</span>
                 </Link>
                 <Link to='/user/profile/edit'>
-                  <button className="pt-0.5 text-xs text-gray-500 hover:text-gray-900 flex items-center gap-1">
+                  <button className="pt-0.5 text-xs text-gray-500 hover:text-gray-900 flex items-center gap-1 cursor-pointer">
                     <EditOutlined className="text-[14px]" />
                     Sửa Hồ Sơ
                   </button>

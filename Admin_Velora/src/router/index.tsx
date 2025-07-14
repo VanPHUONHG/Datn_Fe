@@ -39,6 +39,7 @@ import OrderUpdate from "pages/Order/OrderUpdate";
 
 import UserList from "pages/Account/UserList";
 import UserDetail from "pages/Account/UserDetail";
+import UserEdit from "pages/Account/UserEdit";
 
 import AdminLogin from "pages/Login/Login";
 import RequireAdmin from "pages/Login/RequireAdmin";
@@ -113,6 +114,7 @@ export const router = createBrowserRouter([
       // User
       { path: "user-list", element: <UserList /> },
       { path: "user-detail/:id", element: <UserDetail /> },
+      { path: "user-edit/:id", element: <UserEdit /> },
 
       // comment
       { path: "review-list", element: <ReviewList /> },
