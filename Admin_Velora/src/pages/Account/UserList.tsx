@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers } from "services/user/user.service";
 import type { User } from "types/user";
 
@@ -67,9 +67,11 @@ const UserList = () => {
                       >
                         Chi tiết
                       </button>
-                      <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
-                        Sửa
-                      </button>
+                      <Link to={`/admin/user-edit/${user._id}`}>
+                        <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+                          Sửa
+                        </button>
+                      </Link>
                     </div>
                   </td>
                 </tr>
