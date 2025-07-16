@@ -49,6 +49,7 @@ import ReviewList from "pages/Review/ReviewList";
 import BannerList from "pages/Banner/BannerList";
 import BannerAdd from "pages/Banner/BannerAdd";
 import BannerEdit from "pages/Banner/BannerEdit";
+import Chat from "pages/Chat/Chat";
 
 export const router = createBrowserRouter([
   {
@@ -119,10 +120,13 @@ export const router = createBrowserRouter([
       // comment
       { path: "review-list", element: <ReviewList /> },
 
-        //Banner
-        { path: "banner-list", element: <BannerList /> },
+      //Banner
+      { path: "banner-list", element: <BannerList /> },
       { path: "banner-add", element: <BannerAdd /> },
-            { path: "banner-edit/:id", element: <BannerEdit /> },
+      { path: "banner-edit/:id", element: <BannerEdit /> },
+
+      //Chat
+      { path: "chat", element: <Chat /> },
     ],
   },
 ]);

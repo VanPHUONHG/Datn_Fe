@@ -7,6 +7,7 @@ import {
   AppstoreAddOutlined,
   GiftOutlined,
   PictureOutlined,
+  MessageOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
@@ -69,7 +70,7 @@ const AdminSidebar = () => {
         { key: 'addcategory', label: 'Thêm mới danh mục' },
       ],
     },
-       {
+    {
       key: 'sub8',
       label: 'Quản lý banner',
       icon: <PictureOutlined />,
@@ -111,7 +112,11 @@ const AdminSidebar = () => {
         { key: "reviewlist", label: "Danh sách bình luận" },
       ],
     },
-
+    {
+      key: "chat",
+      label: "Chat tư vấn",
+      icon: <MessageOutlined />,
+    },
     {
       type: 'divider',
     },
@@ -171,11 +176,15 @@ const AdminSidebar = () => {
         navigate("/admin/review-list");
         break;
 
- case "addbanner":
+      case "addbanner":
         navigate("/admin/banner-add");
         break;
-case "bannerlist":
+      case "bannerlist":
         navigate("/admin/banner-list");
+        break;
+
+      case "chat":
+        navigate("/admin/chat");
         break;
 
       default:

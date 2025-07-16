@@ -1,3 +1,5 @@
+//hiển thị giao diện chat (tin nhắn, input).
+
 import React, { useEffect, useRef } from "react";
 import { LuSendHorizontal } from "react-icons/lu";
 import MessageItem from "./MessageItem";
@@ -29,6 +31,8 @@ interface ChatWindowProps {
   onSend: () => void;
   onQuickSend: (text: string) => void;
   onClose: () => void;
+  isTalkingToAdmin: boolean;
+  onEndChat: () => void;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -39,11 +43,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   onQuickSend,
   onClose,
 }) => {
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
-useEffect(() => {
-  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-}, [messages]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="fixed bottom-24 right-6 w-96 h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden animate-fade-in">
       {/* Header */}
@@ -79,62 +84,67 @@ useEffect(() => {
               Array.isArray(msg.products) &&
               msg.products.length > 0 && (
                 <div className="space-y-3">
-             {msg.products.map((v, i) => (
-  <div
-    key={i}
-    className="border rounded-xl p-3 bg-gray-50 shadow-sm text-sm"
-  >
-<a href={`/product/${v.product_id._id}`} className="block group">
-      <div className="flex gap-3">
-        <img
-          src={v.image || "/no-image.png"}
-          alt={v.product_id.name}
-          className="w-32 h-24 object-cover rounded-lg group-hover:opacity-90 transition"
-        />
-        <div className="flex-1">
-          <div className="font-semibold text-base">{v.product_id.name}</div>
-          <div className="text-gray-600">
-            Màu: {v.color} – Size: {v.size}
-          </div>
-          {v.discount_price ? (
-            <div>
-              <div className="text-gray-400 line-through text-sm">
-                {v.price.toLocaleString()}đ
-              </div>
-              <div className="text-red-600 font-bold text-lg">
-                {v.discount_price.toLocaleString()}đ
-              </div>
-            </div>
-          ) : (
-            <div className="text-red-600 font-bold text-lg">
-              {v.price.toLocaleString()}đ
-            </div>
-          )}
-        </div>
-      </div>
-    </a>
-    <div ref={messagesEndRef} />
-
-  </div>
-))}
-
+                  {msg.products.map((v, i) => (
+                    <div
+                      key={i}
+                      className="border rounded-xl p-3 bg-gray-50 shadow-sm text-sm"
+                    >
+                      <a
+                        href={`/product/${v.product_id._id}`}
+                        className="block group"
+                      >
+                        <div className="flex gap-3">
+                          <img
+                            src={v.image || "/no-image.png"}
+                            alt={v.product_id.name}
+                            className="w-32 h-24 object-cover rounded-lg group-hover:opacity-90 transition"
+                          />
+                          <div className="flex-1">
+                            <div className="font-semibold text-base">
+                              {v.product_id.name}
+                            </div>
+                            <div className="text-gray-600">
+                              Màu: {v.color} – Size: {v.size}
+                            </div>
+                            {v.discount_price ? (
+                              <div>
+                                <div className="text-gray-400 line-through text-sm">
+                                  {v.price.toLocaleString()}đ
+                                </div>
+                                <div className="text-red-600 font-bold text-lg">
+                                  {v.discount_price.toLocaleString()}đ
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="text-red-600 font-bold text-lg">
+                                {v.price.toLocaleString()}đ
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  ))}
                 </div>
               )}
           </div>
         ))}
+
+        {/* ✅ Đặt ref ở đây - cuối danh sách tin nhắn */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
       <div className="p-3 border-t flex items-center gap-2 bg-white">
-      <input
-  value={input}
-  onChange={(e) => onChange(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") onSend();
-  }}
-  className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
-  placeholder="Nhập tin nhắn..."
-/>
+        <input
+          value={input}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onSend();
+          }}
+          className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+          placeholder="Nhập tin nhắn..."
+        />
 
         <button
           onClick={onSend}
