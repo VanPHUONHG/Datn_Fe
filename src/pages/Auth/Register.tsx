@@ -32,69 +32,51 @@ const Register: React.FC = () => {
   };
 
   return (
-<form
-  onSubmit={handleSubmit}
-  className="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-8 space-y-6"
->
-  <h2 className="text-2xl font-bold text-center text-gray-800">Đăng ký tài khoản</h2>
+   <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center p-4">
+      <div className="bg-white shadow-2xl rounded-3xl overflow-hidden flex max-w-4xl w-full">
+     
+        <div
+          className="hidden md:block w-1/2 bg-cover bg-center"
+          style={{ backgroundImage: "url('http://localhost:8888/uploads/1751967850310-916565802.avif')" }}
+        ></div>
 
-  <input
-    name="username"
-    placeholder="Tên người dùng"
-    value={form.username}
-    onChange={handleChange}
-    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
+        <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
+          <h2 className="text-3xl font-bold text-center text-blue-600 mb-2">Tạo tài khoản mới</h2>
+          <p className="text-center text-gray-500 mb-6">Tham gia cùng chúng tôi để trải nghiệm dịch vụ tuyệt vời!</p>
 
-  <input
-    name="email"
-    placeholder="Email"
-    type="email"
-    value={form.email}
-    onChange={handleChange}
-    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {[
+              { name: 'username', placeholder: 'Tên người dùng' },
+              { name: 'email', placeholder: 'Email', type: 'email' },
+              { name: 'password', placeholder: 'Mật khẩu', type: 'password' },
+              { name: 'full_name', placeholder: 'Họ và tên' },
+              { name: 'phone', placeholder: 'Số điện thoại' },
+              { name: 'address', placeholder: 'Địa chỉ' },
+            ].map((field) => (
+              <input
+                key={field.name}
+                name={field.name}
+                placeholder={field.placeholder}
+                type={field.type || 'text'}
+                value={form[field.name as keyof typeof form]}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
+              />
+            ))}
 
-  <input
-    name="password"
-    type="password"
-    placeholder="Mật khẩu"
-    value={form.password}
-    onChange={handleChange}
-    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
-
-  <input
-    name="full_name"
-    placeholder="Họ tên"
-    value={form.full_name}
-    onChange={handleChange}
-    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
-
-  <input
-    name="phone"
-    placeholder="Số điện thoại"
-    value={form.phone}
-    onChange={handleChange}
-    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
-
-  <input
-    name="address"
-    placeholder="Địa chỉ"
-    value={form.address}
-    onChange={handleChange}
-    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
-
-  <button
-    type="submit"
-    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-200"
-  >
-    Đăng ký
-  </button>
-</form>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-105"
+            >
+              Đăng ký
+            </button>
+          </form>
+          <div className="mt-6 text-center text-sm text-gray-500 italic">
+            “Cùng bạn tạo dựng tương lai số — An toàn, nhanh chóng và tiện lợi.”
+          </div>
+        </div>
+      </div>
+    </div>
 
   );
 };

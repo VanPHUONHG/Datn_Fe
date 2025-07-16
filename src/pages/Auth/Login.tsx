@@ -28,39 +28,61 @@ const Login: React.FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white shadow-xl rounded-2xl p-8 space-y-6"
-    >
-      <h2 className="text-2xl font-bold text-center text-gray-800">Đăng nhập</h2>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center p-4">
+      <div className="bg-white shadow-2xl rounded-3xl overflow-hidden flex max-w-4xl w-full">
 
-      <input
-        name="username"
-        placeholder="Tên người dùng"
-        value={form.username}
-        onChange={handleChange}
-        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+        <div
+          className="hidden md:block w-1/2 bg-cover bg-center"
+          style={{ backgroundImage: "url('http://localhost:8888/uploads/1752035084665-82711886.webp')" }}
+        ></div>
 
-      <input
-        name="password"
-        type="password"
-        placeholder="Mật khẩu"
-        value={form.password}
-        onChange={handleChange}
-        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
 
-      <button
-        type="submit"
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-200"
-      >
-        Đăng nhập
-      </button>
-      <p className="text-sm text-center text-blue-600 hover:underline mt-2">
-        <Link to="/forgot-password">Quên mật khẩu?</Link>
-      </p>
-    </form>
+        <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
+          <h2 className="text-3xl font-bold text-center text-blue-600 mb-2">Chào mừng bạn trở lại</h2>
+          <p className="text-center text-gray-500 mb-6">Đăng nhập để tiếp tục sử dụng dịch vụ</p>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              name="username"
+              placeholder="Tên người dùng"
+              value={form.username}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
+            />
+
+            <input
+              name="password"
+              type="password"
+              placeholder="Mật khẩu"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
+            />
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-105"
+            >
+              Đăng nhập
+            </button>
+
+            <div className="flex justify-between text-sm mt-2">
+              <Link to="/forgot-password" className="text-blue-600 hover:underline">
+                Quên mật khẩu?
+              </Link>
+              <Link to="/register" className="text-blue-600 hover:underline">
+                Chưa có tài khoản?
+              </Link>
+            </div>
+          </form>
+
+
+          <div className="mt-6 text-center text-sm text-gray-500 italic">
+            “An toàn, nhanh chóng, và luôn đồng hành cùng bạn.”
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
