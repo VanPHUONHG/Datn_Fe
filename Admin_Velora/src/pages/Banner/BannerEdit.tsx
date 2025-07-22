@@ -109,12 +109,21 @@ useEffect(() => {
             onChange={(e) => setImageUrlInput(e.target.value)}
             placeholder="https://..."
           />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-            className="mt-2"
-          />
+        <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        if (!file.type.startsWith("image/")) {
+          message.warning("Chỉ được phép tải lên file ảnh (jpg, png, webp...)");
+          return;
+        }
+        setImageFile(file);
+      }
+    }}
+    className="mb-2"
+  />
           {(imageFile || imageUrlInput) && (
             <img
               src={imageFile ? URL.createObjectURL(imageFile) : imageUrlInput}

@@ -95,13 +95,21 @@ const uploadImage = async (file: File): Promise<string> => {
     className="mb-2"
   />
   <input
-    type="file"
-    accept="image/*"
-    onChange={(e) => {
-      const file = e.target.files?.[0];
-      if (file) setImageFile(file);
-    }}
-  />
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        message.warning("Chỉ được phép tải lên file ảnh (jpg, png, webp...)");
+        setImageFile(null);
+        return;
+      }
+      setImageFile(file);
+    }
+  }}
+/>
+
   {imageFile && (
     <div className="mt-2">
       <img

@@ -187,11 +187,20 @@ if (imageFiles.length === 0 && !imageUrlsInput && matchedVariant && matchedVaria
     onChange={(e) => setThumbnailUrlInput(e.target.value)}
   />
   
-  <input
-    type="file"
-    accept="image/*"
-    onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
-  />
+ <input
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files?.[0];
+    if (file && !file.type.startsWith("image/")) {
+      message.warning("Chỉ được phép tải lên file ảnh");
+      setThumbnailFile(null);
+      return;
+    }
+    setThumbnailFile(file || null);
+  }}
+/>
+
 </div>
 {thumbnailFile && (
   <img
@@ -210,16 +219,22 @@ if (imageFiles.length === 0 && !imageUrlsInput && matchedVariant && matchedVaria
     className="w-full border rounded p-2 h-24 resize-none mb-2"
     placeholder="https://... , https://..."
   ></textarea>
-  <input
-    type="file"
-    accept="image/*"
-    multiple
- onChange={(e) => {
-  const newFiles = Array.from(e.target.files || []);
-  setImageFiles((prev) => [...prev, ...newFiles]);
-}}
+ <input
+  type="file"
+  accept="image/*"
+  multiple
+  onChange={(e) => {
+    const files = Array.from(e.target.files || []);
+    const validImages = files.filter((file) => file.type.startsWith("image/"));
 
-  />
+    if (validImages.length < files.length) {
+      message.warning("Chỉ được phép tải lên file ảnh (jpg, png, webp...)");
+    }
+
+    setImageFiles((prev) => [...prev, ...validImages]);
+  }}
+/>
+
 </div>
 {imageFiles.length > 0 && (
   <div className="flex gap-2 mt-2 flex-wrap">
