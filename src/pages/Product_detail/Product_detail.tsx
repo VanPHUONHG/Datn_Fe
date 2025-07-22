@@ -30,6 +30,7 @@ const ProductDetail = () => {
   const errorToastId = "add-to-cart-error";  //Báo lỗi toast khi giỏ hàng đã vượt quá giới hạn tồn kho
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchProductDetail = async () => {
       try {
         setLoading(true);

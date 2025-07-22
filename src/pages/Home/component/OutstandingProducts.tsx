@@ -10,7 +10,6 @@ const NewestProducts = () => {
     const fetchNewestProducts = async () => {
       try {
         const res = await getNewestProducts();
-        console.log("Sản phẩm mới nhất:", res);
         setProducts(res);
       } catch (error) {
         console.error("Lỗi khi lấy sản phẩm mới nhất:", error);
