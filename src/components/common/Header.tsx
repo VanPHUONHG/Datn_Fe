@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getCart } from "services/cart/cart.service";
 import { getCategories } from "services/category/category.service";
 import { getAllProducts } from "services/product/product.service";
+import { getWishlistByUser } from "services/wistlist/wistlist.service";
 import type { ICategory } from "types/category";
 
 const Header = () => {
@@ -20,6 +22,49 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+const [wishlistCount, setWishlistCount] = useState(0);
+const [cartCount, setCartCount] = useState(0);
+
+//Lấy số lượng item ở wishlist và cart để hiện ở ..._ITEM
+useEffect(() => {
+  const fetchCounts = async () => {
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
+    if (!token || !storedUser) return;
+
+    const user = JSON.parse(storedUser);
+    try {
+      const wishlist = await getWishlistByUser(user._id);
+      setWishlistCount(wishlist.length);
+
+      const cart = await getCart();
+      const cartItems = cart?.data?.products || [];
+      const totalItems = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
+      setCartCount(totalItems);
+    } catch (error) {
+      console.error("❌ Lỗi khi lấy wishlist hoặc cart:", error);
+      setWishlistCount(0);
+      setCartCount(0);
+    }
+  };
+
+  fetchCounts();
+
+  // ✅ Lắng nghe sự kiện cập nhật
+  const handleUpdate = () => {
+    fetchCounts(); // gọi lại mỗi khi có sự kiện
+  };
+  window.addEventListener('storageChanged', handleUpdate); //ở login 
+  window.addEventListener("update-wishlist-cart", handleUpdate);
+
+  return () => {
+      window.removeEventListener('storageChanged', handleUpdate);
+    window.removeEventListener("update-wishlist-cart", handleUpdate);
+  };
+}, []);
+
 
   //Xử lý click để nhấn ở icon user
   useEffect(() => {
@@ -125,6 +170,12 @@ const Header = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
+      setWishlistCount(0);  // Reset số lượng wishlist
+  setCartCount(0);      // Reset số lượng cart
+
+  // Gửi event cho các component khác nếu cần (vẫn giữ)
+  window.dispatchEvent(new Event("update-wishlist-cart"));
+
     navigate("/login");
   };
 
@@ -333,29 +384,31 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Wishlist */}
-          <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer">
-            <i className="far fa-heart text-2xl"></i>
-            <div>
-              <div className="text-xs">3-ITEMS</div>
-              <div className="text-xs font-medium">Wishlist</div>
-            </div>
-          </div>
+        {/* Wishlist */}
+<Link to='/wishlist' className="text-xs block hover:underline">
+  <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer">
+    <i className="far fa-heart text-2xl"></i>
+    <div>
+      <div className="text-xs">{wishlistCount}-ITEMS</div>
+      <div className="text-xs font-medium">Wishlist</div>
+    </div>
+  </div>
+</Link>
 
-          {/* Cart */}
-          <Link to="/cart" className="text-xs block hover:underline">
-            <div
-              className="flex items-center gap-2 hover:text-gray-900 cursor-pointer"
-              onClick={handleClickCart}
-            >
-              <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
+{/* Cart */}
+<Link to="/cart" className="text-xs block hover:underline">
+  <div
+    className="flex items-center gap-2 hover:text-gray-900 cursor-pointer"
+    onClick={handleClickCart}
+  >
+    <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
+    <div>
+      <div className="text-xs">{cartCount}-ITEMS</div>
+      <div className="text-xs font-medium">Cart</div>
+    </div>
+  </div>
+</Link>
 
-              <div>
-                <div className="text-xs">3-ITEMS</div>
-                <div className="text-xs font-medium">Cart</div>
-              </div>
-            </div>
-          </Link>
         </div>
       </div>
 

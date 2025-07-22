@@ -20,11 +20,12 @@ const Cart = () => {
       currency: "VND",
     }).format(value);
 
-  const getItemKey = (item: ICartItem): string => {
-    const productId = typeof item.product === "string" ? item.product : item.product._id;
-    const variantId = typeof item.variant === "string" ? item.variant : item.variant?._id;
-    return `${productId}-${variantId}`;
-  };
+ const getItemKey = (item: ICartItem): string => {
+  const productId = typeof item.product === "string" ? item.product : item.product?._id ?? "null";
+  const variantId = typeof item.variant === "string" ? item.variant : item.variant?._id ?? "null";
+  return `${productId}-${variantId}`;
+};
+
 
   const fetchCart = async () => {
     try {
@@ -63,10 +64,15 @@ const Cart = () => {
         })
       );
 
-      setCart({
-        items: updatedItems,
-        totalPrice: res.data.totalPrice,
-      });
+     const filteredItems = updatedItems.filter(
+  (item) => item.product && item.variant
+);
+
+setCart({
+  items: filteredItems,
+  totalPrice: res.data.totalPrice,
+});
+
     } catch (error) {
       console.error("Lỗi fetch cart", error);
     } finally {
@@ -148,6 +154,8 @@ const Cart = () => {
       setSelectedItemKeys((prev) => prev.filter((k) => k !== key));
 
       toast.success("Đã xoá sản phẩm khỏi giỏ hàng!");
+      window.dispatchEvent(new Event("update-wishlist-cart"));
+
     } catch (err) {
       console.error("Lỗi khi xoá", err);
     }

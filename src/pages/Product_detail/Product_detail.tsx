@@ -11,6 +11,7 @@ import { addToCart, type CartPayload } from "services/cart/cart.service";
 import type { IUser } from "types/user";
 import type { ICartItem } from "types/cart";
 import ProductReviewSection from "./ProductReviewSection";
+import { addToWishlist } from "services/wistlist/wistlist.service";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -28,6 +29,65 @@ const ProductDetail = () => {
   const [previewVariant, setPreviewVariant] = useState<IProductVariant | null>(null);
   const displayedVariant = selectedVariant || previewVariant;
   const errorToastId = "add-to-cart-error";  //Báo lỗi toast khi giỏ hàng đã vượt quá giới hạn tồn kho
+
+  const handleAddToWishlist = async () => {
+    const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) as IUser : null;
+    const userId = user?._id;
+    const productId = product?._id;
+
+    if (!userId) {
+      const toastId = "wishlist-not-logged-in";
+      if (!toast.isActive(toastId)) {
+        toast.error("Vui lòng đăng nhập để thêm vào yêu thích!", {
+          toastId,
+          autoClose: 3000,
+        });
+      }
+      navigate("/login");
+      return;
+    }
+
+    if (!productId) {
+      const toastId = "wishlist-invalid-product";
+      if (!toast.isActive(toastId)) {
+        toast.error("Sản phẩm không hợp lệ!", {
+          toastId,
+          autoClose: 3000,
+        });
+      }
+      return;
+    }
+
+    const toastId = `wishlist-${productId}`;
+    if (toast.isActive(toastId)) return; // Đang hiển thị thông báo thì không xử lý tiếp
+
+    try {
+      await addToWishlist(userId, productId);
+
+      toast.success("Sản phẩm đã được thêm vào danh sách yêu thích!", {
+        toastId,
+        autoClose: 3000,
+        theme: "colored",
+      });
+
+    // 🔔 Gửi sự kiện để Header cập nhật lại số lượng:
+    window.dispatchEvent(new Event("update-wishlist-cart"));
+    } catch (err: any) {
+      if (err?.response?.status === 409 || err?.response?.data?.message === "Đã có trong wishlist") {
+        toast.info("Sản phẩm này đã có trong danh sách yêu thích!", {
+          toastId,
+          autoClose: 2000,
+        });
+      } else {
+        toast.error("❌ Đã có lỗi xảy ra khi thêm vào danh sách yêu thích!", {
+          toastId,
+          autoClose: 3000,
+        });
+      }
+    }
+  };
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -171,6 +231,8 @@ const ProductDetail = () => {
           autoClose: 3000,
         });
       }
+      // 🔔 Gửi sự kiện để Header cập nhật lại số lượng:
+    window.dispatchEvent(new Event("update-wishlist-cart"));
     } catch (error: any) {
       console.error("Lỗi khi thêm vào giỏ hàng:", error);
 
@@ -359,9 +421,9 @@ const ProductDetail = () => {
                   }
                 }}
                 className="w-16 px-2 py-1 border rounded text-sm text-center
-    [appearance:textfield] 
-    [&::-webkit-outer-spin-button]:appearance-none 
-    [&::-webkit-inner-spin-button]:appearance-none"
+                  [appearance:textfield] 
+                  [&::-webkit-outer-spin-button]:appearance-none 
+                  [&::-webkit-inner-spin-button]:appearance-none"
               />
               <button onClick={handleIncrease} className="bg-gray-300 text-black px-3 py-1 rounded hover:bg-gray-400">+</button>
               <button onClick={handleAddToCart} className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-700 text-sm">Thêm vào giỏ</button>
@@ -403,6 +465,14 @@ const ProductDetail = () => {
                 className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-700 text-sm"
               >
                 Mua ngay
+              </button>
+            </div>
+            <div className="mt-4">
+              <button
+                onClick={handleAddToWishlist}
+                className="bg-pink-200 hover:bg-pink-300 text-white px-5 py-2 rounded text-sm flex items-center gap-2"
+              >
+                <i className="fas fa-heart"></i> Yêu thích
               </button>
             </div>
           </div>

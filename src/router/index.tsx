@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
         path: "checkout",
         element: <Checkout />,
       },
-         {
+      {
         path: "payment-result",
         element: <CheckPaymentVNPay />,
       },
@@ -86,7 +86,7 @@ export const router = createBrowserRouter([
         path: "login",
         element: <Login />,
       },
-       {
+      {
         path: "/forgot-password",
         element: <ForgotPassword />,
       },

@@ -22,7 +22,6 @@ const ProductReviewSection = () => {
   const fetchReviews = async () => {
     try {
       const data = await getAllReviewsByProductId(product_id!);
-        console.log("Product ID:", product_id);
 
       setReviews(data);
     } catch (err) {
