@@ -126,8 +126,15 @@ const onSubmit = async (formData: ProductFormInput) => {
     accept="image/*"
     multiple
     onChange={(e) => {
-      const files = Array.from(e.target.files || []);
-      setImageFiles((prev) => [...prev, ...files]);
+   const files = Array.from(e.target.files || []);
+const validImages = files.filter((file) => file.type.startsWith("image/"));
+
+if (validImages.length < files.length) {
+  message.warning("Chỉ được phép tải lên file ảnh (jpg, png, webp...)");
+}
+
+setImageFiles((prev) => [...prev, ...validImages]);
+
     }}
     className="mt-2"
   />
