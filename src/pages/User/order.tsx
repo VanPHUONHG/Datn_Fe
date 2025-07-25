@@ -10,12 +10,14 @@ import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const Order = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,9 +76,19 @@ const Order = () => {
     }
   };
 
-  const totalPages = Math.ceil(orders.length / PAGE_SIZE);
+  const filteredOrders = orders.filter((order) => {
+    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+    const query = searchQuery.toLowerCase();
+    const matchesSearch =
+      formatOrderCode(order._id).toLowerCase().includes(query) ||
+      order.paymentMethod?.toLowerCase().includes(query) ||
+      dayjs(order.createdAt).format('DD/MM/YYYY').includes(query);
+    return matchesStatus && matchesSearch;
+  });
+
+  const totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE);
   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentOrders = orders.slice(startIndex, startIndex + PAGE_SIZE);
+  const currentOrders = filteredOrders.slice(startIndex, startIndex + PAGE_SIZE);
 
   return (
     <div className="p-4">
@@ -87,14 +99,19 @@ const Order = () => {
       ) : (
         <>
           <nav className="flex border-b border-gray-300 px-6 text-gray-700">
-            <button className="border-b-2 border-orange-500 text-orange-500 font-semibold py-3 px-4">
-              Tất cả
-            </button>
-            <button className="hover:text-gray-900 py-3 px-4">Chờ xác nhận</button>
-            <button className="hover:text-gray-900 py-3 px-4">Đã xác nhận</button>
-            <button className="hover:text-gray-900 py-3 px-4">Đang giao</button>
-            <button className="hover:text-gray-900 py-3 px-4">Hoàn thành</button>
-            <button className="hover:text-gray-900 py-3 px-4">Đã hủy</button>
+            {['all', 'pending', 'confirmed', 'shipped', 'completed', 'cancelled'].map((status) => (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                className={`py-3 px-4 ${
+                  statusFilter === status
+                    ? 'border-b-2 border-orange-500 text-orange-500 font-semibold'
+                    : 'hover:text-gray-900'
+                }`}
+              >
+{status === 'all' ? 'Tất cả' : ORDER_STATUS_VI[status as keyof typeof ORDER_STATUS_VI]}
+              </button>
+            ))}
           </nav>
 
           <div className="bg-gray-100 px-6 py-2 border-b border-gray-300 mt-2">
@@ -114,7 +131,9 @@ const Order = () => {
               </svg>
               <input
                 type="text"
-                placeholder="Tìm kiếm đơn hàng, mã KM, sản phẩm..."
+                placeholder="Tìm kiếm theo mã đơn, ngày, phương thức..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-white text-gray-600 placeholder-gray-400"
               />
             </div>
