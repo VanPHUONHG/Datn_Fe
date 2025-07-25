@@ -31,3 +31,15 @@ export const signup = async (data: SignupData) => {
 export const login = async (data: LoginData) => {
   return await axios.post(`${BASE_URL}/login`, data); 
 };
+
+export const sendOtp = async (email: string) => {
+  return await axios.post(`${import.meta.env.VITE_API_URL}/users/forgot-password/send-otp`, { email });
+};
+
+export const verifyOtp = async (data: {
+  email: string;
+  otp: string;
+  newPassword: string;
+}) => {
+  return await axios.post(`${import.meta.env.VITE_API_URL}/users/forgot-password/verify-otp`, data);
+};
