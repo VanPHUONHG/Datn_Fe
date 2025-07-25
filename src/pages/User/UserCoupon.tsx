@@ -14,7 +14,12 @@ const UserCoupon = () => {
         const response = await getAllCoupons();
         const allCoupons = Array.isArray(response) ? response : response.data;
 
-        const activeCoupons = allCoupons.filter((coupon: ICoupon) => coupon.is_active === true);
+const now = new Date();
+const activeCoupons = allCoupons.filter(
+  (coupon: ICoupon) =>
+    coupon.is_active === true &&
+    coupon.end_date && new Date(coupon.end_date) >= now
+);
         setCoupons(activeCoupons);
       } catch (error) {
         console.error('Lỗi khi lấy danh sách mã khuyến mãi:', error);

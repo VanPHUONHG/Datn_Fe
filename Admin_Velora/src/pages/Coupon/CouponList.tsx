@@ -5,7 +5,8 @@ import { getAllCoupons, deleteCoupon } from "services/coupon/coupon.service";
 import type { ICoupon } from "types/coupon";
 
 const CouponList = () => {
-  const [coupons, setCoupons] = useState<ICoupon[]>([]);
+  const [validCoupons, setValidCoupons] = useState<ICoupon[]>([]);
+  const [expiredCoupons, setExpiredCoupons] = useState<ICoupon[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -13,12 +14,19 @@ const CouponList = () => {
       try {
         setLoading(true);
         const res = await getAllCoupons();
-        const allCoupons = res.data;
+        const now = new Date();
 
-        const activeCoupons = Array.isArray(allCoupons)
-          ? allCoupons.filter((coupon) => coupon.is_active === true)
-          : [];
-        setCoupons(activeCoupons);
+        const allCoupons: ICoupon[] = Array.isArray(res.data) ? res.data : [];
+
+        const valid = allCoupons.filter(
+          (coupon) => coupon.is_active && new Date(coupon.end_date) >= now
+        );
+        const expired = allCoupons.filter(
+          (coupon) => coupon.is_active && new Date(coupon.end_date) < now
+        );
+
+        setValidCoupons(valid);
+        setExpiredCoupons(expired);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách mã khuyến mãi:", error);
         message.error("Không thể tải danh sách khuyến mãi");
@@ -29,10 +37,12 @@ const CouponList = () => {
 
     fetchCoupons();
   }, []);
+
   const handleSoftDelete = async (id: string) => {
     try {
       await deleteCoupon(id);
-      setCoupons((prev) => prev.filter((coupon) => coupon._id !== id));
+      setValidCoupons((prev) => prev.filter((c) => c._id !== id));
+      setExpiredCoupons((prev) => prev.filter((c) => c._id !== id));
       message.success("Xoá mã khuyến mãi thành công");
     } catch (error) {
       console.error("Lỗi khi xoá mã khuyến mãi:", error);
@@ -40,18 +50,9 @@ const CouponList = () => {
     }
   };
 
-  return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Danh sách mã khuyến mãi</h2>
-        <Link
-          to="/admin/coupon-delete"
-          className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition"
-        >
-          Xem khuyến mãi đã xoá
-        </Link>
-      </div>
-
+  const renderTable = (coupons: ICoupon[], title: string) => (
+    <div className="mb-10">
+      <h3 className="text-xl font-semibold mb-4">{title}</h3>
       <table className="min-w-full border border-gray-300 text-sm">
         <thead className="bg-gray-100">
           <tr>
@@ -133,6 +134,23 @@ const CouponList = () => {
           )}
         </tbody>
       </table>
+    </div>
+  );
+
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-800">Quản lý mã khuyến mãi</h2>
+        <Link
+          to="/admin/coupon-delete"
+          className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition"
+        >
+          Xem khuyến mãi đã xoá
+        </Link>
+      </div>
+
+      {renderTable(validCoupons, "🎉 Mã khuyến mãi đang còn hạn")}
+      {renderTable(expiredCoupons, "⌛ Mã khuyến mãi đã hết hạn")}
     </div>
   );
 };
