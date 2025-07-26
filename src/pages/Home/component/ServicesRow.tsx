@@ -1,48 +1,77 @@
-import React, { memo } from 'react'
+import type Blog from 'pages/Blog/Blog';
+import React, { memo, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { getBlogs } from 'services/blog/blog.service';
 
 const ServicesRow = () => {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await getBlogs({ limit: 3 });
+        setBlogs(res.data.blogs || []);
+      } catch (error) {
+        console.error("Failed to fetch blogs", error);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {[
-          {
-            label: "Free Shipping",
-            icon: "fas fa-truck",
-            desc: "Free shipping on all US order or order above $200",
-            aria: "Free Shipping service",
-          },
-          {
-            label: "24X7 Support",
-            icon: "fas fa-seedling",
-            desc: "Contact us 24 hours a day, 7 days a week",
-            aria: "24x7 Support service",
-          },
-          {
-            label: "30 Days Return",
-            icon: "fas fa-percent",
-            desc: "Simply return it within 30 days for an exchange",
-            aria: "30 Days Return service",
-          },
-          {
-            label: "Payment Secure",
-            icon: "fas fa-dollar-sign",
-            desc: "Contact us 24 hours a day, 7 days a week",
-            aria: "Payment Secure service",
-          },
-        ].map((item, index) => (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800">
+          Xã hội giày thể thao & Tin tức giày
+        </h2>
+        <p className="text-gray-500 text-sm mt-1">Bài viết & xu hướng mới nhất</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {blogs.map((blog) => (
           <div
-            key={index}
-            aria-label={item.aria}
-            className="border border-gray-200 rounded-lg p-6 flex flex-col items-center text-center shadow-sm transition duration-300 ease-in-out hover:shadow-md hover:border-green-600"
+            key={blog._id}
+            className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
           >
-            <i className={`${item.icon} text-green-600 text-2xl mb-3`}></i>
-            <h3 className="font-semibold text-gray-700 text-sm mb-1">
-              {item.label}
-            </h3>
-            <p className="text-gray-400 text-xs leading-tight">{item.desc}</p>
+            <Link to={`/blog/${blog.slug}`}>
+              <img
+                src={blog.thumbnail}
+                alt={blog.title}
+                className="w-full h-52 object-cover"
+              />
+            </Link>
+
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
+                {blog.title}
+              </h3>
+              <p className="text-sm text-gray-500 mb-1">
+                {new Date(blog.publishedAt).toLocaleDateString()}
+              </p>
+              <p className="text-sm text-gray-600 line-clamp-3 mb-2">
+                {blog.excerpt}
+              </p>
+              <Link
+                to={`/blog/${blog.slug}`}
+                className="text-sm font-medium text-green-600 hover:underline"
+              >
+                Đọc thêm →
+              </Link>
+            </div>
           </div>
         ))}
       </div>
+
+     <div className="mt-6 text-right">
+  <Link
+    to="/blog"
+    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    className="text-sm text-gray-500 hover:text-green-600 hover:underline"
+  >
+    Xem tất cả bài viết →
+  </Link>
+</div>
+
     </div>
   );
 };

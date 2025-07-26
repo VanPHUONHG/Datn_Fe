@@ -39,3 +39,24 @@ export const getNewestProducts = async (limit = 8) => {
     throw error;
   }
 };
+
+
+// Lấy danh sách sản phẩm bán chạy nhất
+export const getTopSellingProducts = async (limit = 4, fromDate?: string, toDate?: string) => {
+  try {
+    const params: any = { limit };
+    if (fromDate && toDate) {
+      params.from = fromDate;
+      params.to = toDate;
+    }
+
+    const response = await axios.get(`${API_URL}/dashboard/top-products`, {
+      params,
+    });
+
+    return response.data.data; 
+  } catch (error) {
+    console.error("Error fetching top selling products:", error);
+    throw error;
+  }
+};

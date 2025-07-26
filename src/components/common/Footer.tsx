@@ -1,42 +1,38 @@
-
-
 const Footer = () => {
   return (
     <footer className="w-full bg-gradient-to-r from-green-100 via-white to-green-100 text-gray-700 border-t border-gray-200 mt-10 py-6">
       <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row md:justify-between md:items-start gap-10 md:gap-0">
-        {/* Logo & Description */}
-        <div className="flex flex-col items-center md:items-start md:w-1/4 space-y-4">
+        {/* Logo & Mô tả */}
+        <div className="flex flex-col items-center md:items-start md:w-1/4 space-y-4 mr-6">
           <img
             src="/image/logo.png"
-            alt="Velora Shoe Store"
+            alt="Velora Shoes"
             className="w-16 h-16 rounded-sm ml-24"
             style={{ minWidth: '64px', minHeight: '64px' }}
           />
           <p className="text-[13px] text-center md:text-left leading-relaxed max-w-xs text-gray-600">
-            Grabit is the biggest market of grocery products.
-            <br />
-            Get your daily needs from our store.
-          </p>
+            Velora – nơi bạn tìm thấy những đôi giày thời trang, chất lượng, phù hợp cho mọi phong cách.
+                      </p>
           <div className="flex space-x-3">
-            <img src="/assets/images/android.png.png" alt="Android App" className="w-30 h-10 min-w-[120px]" />
-            <img src="/assets/images/apple.png.png" alt="Apple App" className="w-30 h-10 min-w-[120px]" />
+            <img src="/assets/images/android.png.png" alt="Tải ứng dụng Android" className="w-30 h-10 min-w-[120px]" />
+            <img src="/assets/images/apple.png.png" alt="Tải ứng dụng iOS" className="w-30 h-10 min-w-[120px]" />
           </div>
         </div>
 
-        {/* Links */}
+        {/* Liên kết */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 md:w-3/4">
           {[
             {
-              title: 'Category',
-              items: ['Dried Fruit', 'Cookies', 'Foods', 'Fresh Fruit', 'Tuber Root', 'Vegetables'],
+              title: 'Danh mục',
+              items: ['Giày puma', 'Giày sneaker nữ', 'Giày sneaker nam', 'Giày nike', 'Giày adidas'],
             },
             {
-              title: 'Company',
-              items: ['About us', 'Delivery', 'Legal Notice', 'Terms & conditions', 'Secure payment', 'Contact us'],
+              title: 'Công ty',
+              items: ['Về chúng tôi', 'Chính sách giao hàng', 'Điều khoản sử dụng', 'Thanh toán an toàn', 'Liên hệ'],
             },
             {
-              title: 'Account',
-              items: ['Sign In', 'View Cart', 'Return Policy', 'Become a Vendor', 'Affiliate Program', 'Payments'],
+              title: 'Tài khoản',
+              items: ['Đăng nhập', 'Giỏ hàng', 'Chính sách đổi trả', 'Trở thành đối tác', 'Chương trình cộng tác viên'],
             },
           ].map((section, idx) => (
             <div key={idx}>
@@ -51,21 +47,21 @@ const Footer = () => {
             </div>
           ))}
 
-          {/* Contact */}
+          {/* Liên hệ */}
           <div>
-            <h3 className="text-gray-700 font-medium text-lg mb-4 border-b border-gray-200 pb-2">Contact</h3>
+            <h3 className="text-gray-700 font-medium text-lg mb-4 border-b border-gray-200 pb-2">Liên hệ</h3>
             <ul className="space-y-3 text-sm text-gray-500">
               <li className="flex items-start space-x-2">
                 <i className="fas fa-map-marker-alt text-green-500 mt-1 text-sm"></i>
-                <span>2548 Broaddus Maple Court, Madisonville KY 4783, USA.</span>
+                <span>86 Đội Cấn, P. Liễu Giai, Q. Ba Đình, Hà Nội</span>
               </li>
               <li className="flex items-center space-x-2">
                 <i className="fab fa-whatsapp text-green-500 text-sm"></i>
-                <span>+00 9876543210</span>
+                <span>+87 8888 907</span>
               </li>
               <li className="flex items-center space-x-2">
                 <i className="fas fa-envelope text-green-500 text-sm"></i>
-                <span>example@email.com</span>
+                <span>support@velora.vn</span>
               </li>
               <li className="flex space-x-2">
                 {['facebook-f', 'twitter', 'linkedin-in', 'instagram'].map((icon, i) => (
@@ -84,20 +80,20 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
+      {/* Thanh dưới */}
       <div className="border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400">
           <p className="mb-2 sm:mb-0">
-            Copyright ©{' '}
+            © {new Date().getFullYear()}{' '}
             <a className="text-green-500 hover:underline" href="#">
-              Grabit
+              Velora Shoes
             </a>{' '}
-            all rights reserved. Powered by Grabit.
+            - Tất cả bản quyền được bảo lưu.
           </p>
           <div className="flex items-center">
             <img
               src="/image/image.png"
-              alt="Footer Logo"
+              alt="Logo Footer"
               className="w-auto h-6"
               style={{ minWidth: 'auto', minHeight: '24px' }}
             />

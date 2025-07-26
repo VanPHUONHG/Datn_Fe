@@ -71,12 +71,7 @@ const User = () => {
             <Link to={'/user/coupon'}>
               <button className="flex items-center gap-3 text-gray-700 hover:underline">Kho Voucher</button>
             </Link>
-            <button className="flex items-center gap-3 text-yellow-500 hover:underline">Shopee Xu</button>
-            <button className="flex items-center gap-2 text-gray-800 hover:underline">
-              <img src="https://www.bigc.vn/files/banners/2022/july-nh/payday-go-cover-blog.jpg" alt="promo" className="w-6 h-6 rounded-full" />
-              25.6 Lương Về Sale To
-              <span className="ml-1 bg-red-600 text-white text-xs font-semibold px-1 rounded-sm">New</span>
-            </button>
+          
           </nav>
         </aside>
 

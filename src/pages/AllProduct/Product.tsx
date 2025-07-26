@@ -4,11 +4,11 @@ import type { Product } from 'interface/product';
 import { getAll } from 'services/allProduct/allProduct.service';
 
 const COLORS = [
-  { value: 'black', label: 'Đen' },
-  { value: 'white', label: 'Trắng' },
-  { value: 'blue', label: 'Xanh' },
-  { value: 'red', label: 'Đỏ' },
-  { value: 'brown', label: 'Nâu' },
+  { value: 'Đen', label: 'Đen' },
+  { value: 'Trắng', label: 'Trắng' },
+  { value: 'Xanh', label: 'Xanh' },
+  { value: 'Đỏ', label: 'Đỏ' },
+  { value: 'Nâu', label: 'Nâu' },
 ];
 
 function AllProducts() {
@@ -166,7 +166,7 @@ function AllProducts() {
       </h3>
       {showBrandFilter && (
         <div className="space-y-2 pl-1">
-          {['Nike', 'Adidas', 'Puma', 'Converse'].map((brand) => (
+          {['Nike', 'Adidas', 'Puma', 'Converse','Vans','Reebok'].map((brand) => (
             <label key={brand} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"

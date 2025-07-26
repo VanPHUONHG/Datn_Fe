@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { getWishlistByUser, removeFromWishlist } from 'services/wistlist/wistlist.service';
 import type { Product } from 'types/product';
 import type { IUser } from 'types/user';
@@ -103,7 +104,14 @@ src={item.images[0]}
           
         />
       </td>
-      <td className="py-2 pr-6 font-normal text-gray-600">{item.name}</td>
+      <td className="py-2 pr-6 font-normal text-gray-600">
+        <Link
+    to={`/product/${item._id}`}
+    className="text-blue-500 hover:underline hover:text-blue-700 transition"
+  >
+    {item.name}
+  </Link>
+      </td>
     <td className="py-2 pr-6 font-normal text-gray-600">
   {new Date(item.addedAt).toLocaleDateString("vi-VN")}
 </td>

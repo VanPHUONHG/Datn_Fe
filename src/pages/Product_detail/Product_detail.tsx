@@ -251,6 +251,20 @@ const ProductDetail = () => {
     }
 
   };
+  //Lấy các sản phẩm đã xem để hiện sản phẩm ở phần bên dưới cart
+  useEffect(() => {
+  if (product) {
+    const viewed = JSON.parse(localStorage.getItem("viewedProducts") || "[]");
+
+    // Xoá sản phẩm trùng nếu đã có
+    const filtered = viewed.filter((p: any) => p._id !== product._id);
+
+    // Giới hạn tối đa 10 sản phẩm
+    const updated = [product, ...filtered].slice(0, 10);
+
+    localStorage.setItem("viewedProducts", JSON.stringify(updated));
+  }
+}, [product]);
 
   if (loading) return <p className="text-center py-10">Đang tải dữ liệu...</p>;
   if (!product) return <p className="text-center py-10">Không tìm thấy sản phẩm</p>;

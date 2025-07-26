@@ -167,6 +167,7 @@ useEffect(() => {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("viewedProducts");
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
@@ -215,6 +216,21 @@ useEffect(() => {
     return () => document.removeEventListener("mousedown", handleClickOutsideSearch);
   }, []);
 
+const [sloganIndex, setSloganIndex] = useState(0);
+  const slogans = [
+  "Giao hàng siêu tốc chỉ trong 2 giờ",
+  "Ưu đãi mỗi ngày – Mua sắm không giới hạn",
+  "Sản phẩm chính hãng, đổi trả dễ dàng",
+  "Mua sắm online an toàn & tiện lợi",
+  "Hàng triệu người tin dùng mỗi ngày",
+];
+useEffect(() => {
+  const interval = setInterval(() => {
+    setSloganIndex((prev) => (prev + 1) % slogans.length);
+  }, 1500); 
+
+  return () => clearInterval(interval);
+}, []);
   return (
     <div className="bg-gradient-to-r from-green-50 via-white to-green-50 border-b border-gray-100 text-xs text-gray-600">
       {/* Top Bar */}
@@ -222,15 +238,16 @@ useEffect(() => {
         <div className="max-w-7xl mx-auto flex justify-between items-center h-8 px-4">
           <div className="flex gap-4 items-center">
             <span className="flex items-center gap-1">
-              <i className="fas fa-phone-alt text-xs"></i> +91 987 654 3210
+              <i className="fas fa-phone-alt text-xs"></i> +0878888907
             </span>
             <span className="flex items-center gap-1">
-              <i className="fab fa-whatsapp text-xs"></i> +91 987 654 3210
+              <i className="fab fa-whatsapp text-xs"></i> +0878888888
             </span>
           </div>
-          <div className="text-center hidden md:block">
-            World's Fastest Online Shopping Destination
-          </div>
+        <div className="text-center hidden md:block transition-opacity duration-500 text-sm font-medium text-gray-600">
+  {slogans[sloganIndex]}
+</div>
+
           <div className="flex items-center gap-4">
             <a href="#" className="hover:text-gray-700">
               Help?
@@ -262,7 +279,7 @@ useEffect(() => {
           <div className="relative w-[500px] z-50" ref={wrapperRef}>
             <input
               type="text"
-              placeholder="Search Products..."
+              placeholder="Tìm kiếm sản phẩm..."
               className="w-full border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -390,7 +407,7 @@ useEffect(() => {
     <i className="far fa-heart text-2xl"></i>
     <div>
       <div className="text-xs">{wishlistCount}-ITEMS</div>
-      <div className="text-xs font-medium">Wishlist</div>
+      <div className="text-xs font-medium">Yêu thích</div>
     </div>
   </div>
 </Link>
@@ -404,7 +421,7 @@ useEffect(() => {
     <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
     <div>
       <div className="text-xs">{cartCount}-ITEMS</div>
-      <div className="text-xs font-medium">Cart</div>
+      <div className="text-xs font-medium">Giỏ hàng</div>
     </div>
   </div>
 </Link>
@@ -414,7 +431,7 @@ useEffect(() => {
 
       {/* Navigation */}
       <div className="border-y border-gray-100">
-        <div className="max-w-7xl mx-auto h-12 flex justify-between items-center px-4">
+        <div className="max-w-7xl mx-auto h-12 flex justify-between items-center px-8">
           {/* Left - All Categories */}
           <div className="relative inline-block text-left" ref={dropdownRef}>
             <button
@@ -422,7 +439,7 @@ useEffect(() => {
               className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm"
             >
               <i className="fas fa-th-large text-white"></i>
-              <p className="text-white pt-2.5">All Categories</p>
+              <p className="text-white pt-2.5">Danh mục</p>
               <i className="fas fa-chevron-down text-[10px] text-white"></i>
             </button>
 
@@ -456,18 +473,27 @@ useEffect(() => {
           </div>
 
           {/* Center - Navigation Links */}
-          <nav className="flex gap-x-8 justify-between font-medium px-4">
-            <Link to="/" className="hover:text-green-600">Trang chủ</Link>
-            <Link to="/products" className="hover:text-green-600">Sản phẩm</Link>
-            <Link to="/blog" className="hover:text-green-600">Tin tức</Link>
-            <Link to="/top-selling-product" className="hover:text-green-600">Bán chạy nhất</Link>
-            <Link to="/lien_he" className="hover:text-green-600">Liên hệ</Link>
-          </nav>
+<nav className="flex gap-x-8 justify-between text-sm font-normal font-sans px-4">
+  <Link to="/" className="relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-green-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 transition text-gray-700">
+    Trang chủ
+  </Link>
+  <Link to="/products" className="relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-green-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 transition text-gray-700">
+    Sản phẩm
+  </Link>
+  <Link to="/blog" className="relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-green-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 transition text-gray-700">
+    Tin tức
+  </Link>
+  <Link to="/lien_he" className="relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-green-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 transition text-gray-700">
+    Liên hệ
+  </Link>
+</nav>
+
+
 
           {/* Right - Location */}
           <button className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm">
             <i className="fas fa-map-marker-alt text-white"></i>
-            <p className="text-white pt-2.5 pr-4">New York</p>
+            <p className="text-white pt-2.5 pr-4">Việt Nam</p>
             <i className="fas fa-chevron-down text-[10px] text-white"></i>
           </button>
         </div>

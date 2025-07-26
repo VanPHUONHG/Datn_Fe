@@ -22,6 +22,7 @@ import ProfileEdit from "pages/User/ProfileEdit";
 import ChangePassword from "pages/User/ChangePassword";
 import TopSellingProduct from "pages/TopSellingProduct/TopSellingProduct";
 import ForgotPassword from "pages/Auth/ForgotPassword";
+import Contact from "pages/Contact/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ export const router = createBrowserRouter([
       {
         path: "/forgot-password",
         element: <ForgotPassword />,
+      },
+       {
+        path: "/lien_he",
+        element: <Contact />,
       },
       {
         path: "user",

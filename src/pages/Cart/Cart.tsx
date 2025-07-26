@@ -200,6 +200,18 @@ setCart({
   const deliveryCharges = 32000;
   const totalWithDelivery = totalAmount + deliveryCharges;
 
+
+  //Hiện các sản phẩm đã đc bấm xem chi tiết
+  const [viewedProducts, setViewedProducts] = useState<any[]>([]);
+
+useEffect(() => {
+  const viewed = JSON.parse(localStorage.getItem("viewedProducts") || "[]");
+  setViewedProducts(viewed);
+}, []);
+//Chỉ hiện 4 sản phẩm và có nút xem thêm để xem tất cả
+const [showAll, setShowAll] = useState(false);
+const displayedProducts = showAll ? viewedProducts : viewedProducts.slice(0, 5);
+
   if (loading) return <p className="text-center py-10">Đang tải giỏ hàng...</p>;
   if (!cart || cart.items.length === 0)
     return <p className="text-center py-10">Giỏ hàng của bạn đang trống</p>;
@@ -324,7 +336,60 @@ setCart({
           </button>
         </div>
       </div>
+
+   {viewedProducts.length > 0 && (
+  <div className="max-w-7xl mx-auto px-4 pt-6">
+    <h2 className="text-lg font-semibold mb-4">Sản phẩm bạn đã xem</h2>
+
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {displayedProducts.map((item) => (
+        <Link
+          key={item._id}
+          to={`/product/${item._id}`}
+          className="border border-gray-200 rounded p-3 hover:shadow transition bg-white"
+        >
+          <div className="w-full h-40 flex items-center justify-center overflow-hidden bg-gray-50 mb-2">
+            <img
+              src={item.images?.[0] || "/no-image.png"}
+              alt={item.name}
+              className="object-contain w-full h-full"
+            />
+          </div>
+          <h3 className="text-sm font-medium text-gray-800 line-clamp-2">{item.name}</h3>
+          <p className="text-red-500 font-semibold text-sm">
+            {item.discount_price?.toLocaleString() || item.price?.toLocaleString()}₫
+          </p>
+        </Link>
+      ))}
     </div>
+
+    {viewedProducts.length > 4 && (
+      <div className="text-center mt-4">
+        <button
+          onClick={() => setShowAll((prev) => !prev)}
+          className="inline-flex items-center gap-1 text-green-600 hover:text-green-800 text-sm font-medium"
+        >
+          {showAll ? "Thu gọn" : "Xem thêm"}
+          <svg
+            className={`w-4 h-4 transform transition-transform duration-300 ${
+              showAll ? "rotate-180" : ""
+            }`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
+
+    </div>
+    
   );
 };
 
