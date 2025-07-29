@@ -1,30 +1,60 @@
-import { message, Popconfirm } from "antd";
+import { message, Popconfirm, Select } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getAllProducts } from "services/product/product.service";
 import { deleteVariant, getAllVariants  } from "services/variant/variant.service";
+import type { Product } from "types/product";
 import type { IProductVariant } from "types/variant";
 
 const VariantList = () => {
  const [variants, setVariants] = useState<IProductVariant[]>([]);
 const [page, setPage] = useState(1);
 const [total, setTotal] = useState(0); // tổng biến thể
-const perPage = 5;
-const currentVariants = variants;
+const perPage = 20;
+
+//Lọc sku , size,màu,giá
+const [searchSku, setSearchSku] = useState("");
+const [filterSize, setFilterSize] = useState<string | undefined>();
+const [filterColor, setFilterColor] = useState<string | undefined>();
+const [minPrice, setMinPrice] = useState<number | undefined>();
+const [maxPrice, setMaxPrice] = useState<number | undefined>();
+
+const [productOptions, setProductOptions] = useState<Product[]>([]);
+const [productId, setProductId] = useState<string | undefined>();
+
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const data = await getAllProducts({ limit: 9999 });
+      setProductOptions(data.products || []);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách sản phẩm:", error);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
 useEffect(() => {
   const fetchVariants = async () => {
     try {
-      const data = await getAllVariants({ page, limit: perPage });
-      setVariants(data.variants || []);
-      setTotal(data.pagination?.totalItem || 0); 
+    const data = await getAllVariants({ product_id: productId } as any);
+
+      const sorted = (data.variants || []).sort(
+        (a: any, b: any) =>
+          new Date(b.created_at || "").getTime() -
+          new Date(a.created_at || "").getTime()
+      );
+
+      setVariants(sorted);
+      setTotal(data.pagination?.totalItem || 0);
     } catch (error) {
-      console.log(error);
+      console.error("Lỗi khi lấy biến thể:", error);
     }
   };
-  fetchVariants();
-}, [page]);
 
-const totalPages = Math.ceil(total / perPage); 
+  fetchVariants();
+}, [productId]);
 
 
   const handleDelete = async (id: string) => {
@@ -37,6 +67,30 @@ const totalPages = Math.ceil(total / perPage);
       console.log(error);
     }
   };
+
+//Lọc cho về trang 1
+useEffect(() => {
+  setPage(1);
+}, [searchSku, filterSize, filterColor, minPrice, maxPrice]);
+
+  // Lọc biến thể theo điều kiện đã nhập
+const filteredVariants = variants.filter((item) => {
+  const skuMatch = item.sku?.toLowerCase().includes(searchSku.toLowerCase());
+  const sizeMatch = filterSize ? item.size === filterSize : true;
+const colorMatch = filterColor
+  ? item.color?.toLowerCase() === filterColor.toLowerCase()
+  : true;
+    const priceMatch =
+    (minPrice === undefined || item.price >= minPrice) &&
+    (maxPrice === undefined || item.price <= maxPrice);
+
+  return skuMatch && sizeMatch && colorMatch && priceMatch;
+});
+
+// Phân trang cho danh sách đã lọc
+const currentVariants = filteredVariants.slice((page - 1) * perPage, page * perPage);
+const totalPages = Math.ceil(filteredVariants.length / perPage);
+
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
@@ -52,6 +106,69 @@ const totalPages = Math.ceil(total / perPage);
           Xem biến thể đã xóa
         </Link>
       </div>
+<div className="mb-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <Select
+  showSearch
+  allowClear
+  placeholder="Chọn sản phẩm"
+  className="w-full"
+  value={productId}
+  onChange={(value) => setProductId(value || undefined)}
+  optionFilterProp="label"
+  options={productOptions.map((product) => ({
+    value: product._id,
+    label: product.name,
+  }))}
+/>
+
+  <input
+    type="text"
+    placeholder="Tìm theo SKU"
+    value={searchSku}
+    onChange={(e) => setSearchSku(e.target.value)}
+    className="border px-3 py-2 rounded w-full"
+  />
+  <input
+    type="text"
+    placeholder="Lọc theo size"
+    value={filterSize || ""}
+    onChange={(e) => setFilterSize(e.target.value || undefined)}
+    className="border px-3 py-2 rounded w-full"
+  />
+  <input
+    type="text"
+    placeholder="Lọc theo màu"
+    value={filterColor || ""}
+    onChange={(e) => setFilterColor(e.target.value || undefined)}
+    className="border px-3 py-2 rounded w-full"
+  />
+  <div className="flex gap-2">
+   <input
+  type="text"
+  placeholder="Giá từ"
+  value={minPrice !== undefined ? minPrice.toLocaleString() : ""}
+  onChange={(e) => {
+    const raw = e.target.value.replace(/,/g, ""); // loại dấu ,
+    const number = raw ? parseInt(raw) : undefined;
+    setMinPrice(number);
+  }}
+  className="border px-3 py-2 rounded w-full"
+/>
+
+  <input
+  type="text"
+  placeholder="Đến"
+  value={maxPrice !== undefined ? maxPrice.toLocaleString() : ""}
+  onChange={(e) => {
+    const raw = e.target.value.replace(/,/g, ""); // loại dấu ,
+    const number = raw ? parseInt(raw) : undefined;
+    setMaxPrice(number);
+  }}
+  className="border px-3 py-2 rounded w-full"
+/>
+
+  </div>
+</div>
 
       <table className="min-w-full border border-gray-300 text-sm">
         <thead className="bg-gray-100 sticky top-0 z-10">
@@ -66,6 +183,7 @@ const totalPages = Math.ceil(total / perPage);
             ))}
           </tr>
         </thead>
+        
         <tbody>
           {currentVariants.length === 0 ? (
             <tr>

@@ -4,7 +4,7 @@ import type { IProductVariant } from "types/variant";
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Lấy danh sách biến thể
-export const getAllVariants = async (params: { page: number; limit: number }) => {
+export const getAllVariants = async (params?: { page?: number; limit?: number }) => {
   try {
     const res = await axios.get(`${API_URL}/productvariants`, { params });
     return res.data; 

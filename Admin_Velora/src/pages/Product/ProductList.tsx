@@ -1,6 +1,7 @@
-import { message, Popconfirm } from "antd";
+import { Input, message, Popconfirm, Select } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getAllCategories } from "services/category/category.service";
 import { deleteProductById, getAllProducts } from "services/product/product.service";
 
 import type { Product } from "types/product";
@@ -8,13 +9,36 @@ import type { Product } from "types/product";
 const ProductList = () => {
   const [products, setProduct] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
-  const perPage = 5;
+  const perPage = 10;
+
+  //Tìm theo tên và lọc danh mục 
+  const [searchName, setSearchName] = useState("");
+const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+const [categories, setCategories] = useState<{ _id: string; name: string }[]>([]);
+const { Option } = Select;
+
+useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const res = await getAllCategories(); // bạn cần implement hàm này trong service
+      setCategories(res || []);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh mục", error);
+    }
+  };
+
+  fetchCategories();
+}, []);
+
 
   useEffect(() => {
     const getProducts = async () => {
       try {
         const data = await getAllProducts();
-        setProduct(data.products || []);
+const sorted = (data.products || []).sort(
+  (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+);
+setProduct(sorted);
       } catch (error) {
         console.log(error);
       }
@@ -22,9 +46,18 @@ const ProductList = () => {
     getProducts();
   }, []);
 
-  // Lấy sản phẩm theo trang hiện tại
-  const currentProducts = products.slice((page - 1) * perPage, page * perPage);
-  const totalPages = Math.ceil(products.length / perPage);
+  //Tìm kiếm tên và lọc theo danh mục
+const filteredProducts = products.filter((item) => {
+  const nameMatch = item.name.toLowerCase().includes(searchName.toLowerCase());
+  const categoryMatch = selectedCategory
+    ? item.category?.name === selectedCategory
+    : true;
+  return nameMatch && categoryMatch;
+});
+
+const totalPages = Math.ceil(filteredProducts.length / perPage);
+const currentProducts = filteredProducts.slice((page - 1) * perPage, page * perPage);
+
 
   const DelProduct = async (id: string) => {
     try {
@@ -51,7 +84,30 @@ const ProductList = () => {
           Xem sản phẩm đã xóa
         </Link>
       </div>
+      <div className="mb-4 flex gap-4 items-center">
+  <Input
+    placeholder="Tìm theo tên sản phẩm"
+    value={searchName}
+    onChange={(e) => setSearchName(e.target.value)}
+    className="w-64"
+  />
+  <Select
+    allowClear
+    placeholder="Lọc theo danh mục"
+    value={selectedCategory}
+    onChange={(value) => setSelectedCategory(value)}
+    className="w-64"
+  >
+    {categories.map((cat) => (
+      <Option key={cat._id} value={cat.name}>
+        {cat.name}
+      </Option>
+    ))}
+  </Select>
+</div>
+
       <div >
+        
         <table className="min-w-full border border-gray-300 text-sm">
           <thead className="bg-gray-100 sticky top-0 z-10">
             <tr>
