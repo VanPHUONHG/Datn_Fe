@@ -47,19 +47,19 @@ const handleRemove = async (productId: string) => {
             <div className="max-w-7xl mx-auto border border-blue-300 p-6 mt-6 mb-6">
                 <header className="text-center mb-6">
                     <h1 className="text-gray-700 text-lg font-normal">
-                        Product
-                        <span className="text-green-400 font-normal">
-                            Wishlist
+                        Danh sách sản phẩm
+                        <span className="text-green-400 font-normal ml-1">
+                            Yêu thích
                         </span>
                     </h1>
                     <p className="text-xs text-gray-400 mt-1">
-                        Your product wish is our first priority.
+                      Mong muốn sản phẩm của bạn là ưu tiên hàng đầu của chúng tôi.
                     </p>
                 </header>
                 <section>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xs text-gray-500 font-semibold tracking-wide">
-                            WISHLIST
+                           DANH SÁCH YÊU THÍCH
                         </h2>
 
                     </div>
