@@ -1,177 +1,206 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { addToCart } from "services/cart/cart.service";
+import { getAllProducts } from "services/product/product.service";
+import { getAllVariantsByProductId, getVariantById } from "services/productVariant/productVariant.service";
+import type { Product } from "types/product";
+import type { IProductVariant } from "types/productVariant";
 
 const Compare = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [variantsMap, setVariantsMap] = useState<{ [productId: string]: IProductVariant[] }>({});
+  const [selectedProductIds, setSelectedProductIds] = useState<{ p1: string; p2: string }>({ p1: "", p2: "" });
+  const [selectedVariantIds, setSelectedVariantIds] = useState<{ v1: string; v2: string }>({ v1: "", v2: "" });
+  const [variants, setVariants] = useState<{ v1: IProductVariant | null; v2: IProductVariant | null }>({ v1: null, v2: null });
+
+  useEffect(() => {
+    getAllProducts().then((data) => setProducts(data));
+  }, []);
+
+  useEffect(() => {
+    const loadVariants = async (productId: string) => {
+      const variants = await getAllVariantsByProductId(productId);
+      setVariantsMap((prev) => ({ ...prev, [productId]: variants }));
+    };
+
+    if (selectedProductIds.p1 && !variantsMap[selectedProductIds.p1]) {
+      loadVariants(selectedProductIds.p1);
+    }
+    if (selectedProductIds.p2 && !variantsMap[selectedProductIds.p2]) {
+      loadVariants(selectedProductIds.p2);
+    }
+  }, [selectedProductIds]);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const [v1, v2] = await Promise.all([
+        selectedVariantIds.v1 ? getVariantById(selectedVariantIds.v1) : null,
+        selectedVariantIds.v2 ? getVariantById(selectedVariantIds.v2) : null,
+      ]);
+      setVariants({ v1, v2 });
+    };
+    fetchDetails();
+  }, [selectedVariantIds]);
+
+  const renderValue = (v: IProductVariant | null, key: keyof IProductVariant) => {
+    if (!v) return "-";
+    if (key === "price") {
+      return v.discount_price ? (
+        <>
+          <span className="line-through text-red-400 mr-2">{v.price.toLocaleString()}₫</span>
+          <span className="text-green-500">{v.discount_price.toLocaleString()}₫</span>
+        </>
+      ) : (
+        <span>{v.price.toLocaleString()}₫</span>
+      );
+    }
+    if (key === "product_id") {
+      return typeof v.product_id === "object" ? v.product_id.name : "";
+    }
+    return v[key];
+  };
+
+const lastToastTimeRef = useRef<number>(0);
+
+const handleAddToCart = async (variantId?: string, productId?: string) => {
+  if (!variantId || !productId) return;
+
+  try {
+    await addToCart({ product_id: productId, variant_id: variantId, quantity: 1 });
+
+    const now = Date.now();
+       if (now - lastToastTimeRef.current >= 3000) {
+      toast.success(" Đã thêm vào giỏ hàng!");
+      lastToastTimeRef.current = now;
+    }
+
+    window.dispatchEvent(new Event("update-wishlist-cart"));
+  }  catch (error: any) {
+    const message = error?.response?.data?.message || "Thêm vào giỏ hàng thất bại!";
+    toast.error(` ${message}`, {
+    toastId: "add-to-cart-error", 
+  });
+  }
+};
+
   return (
-    <div className="overflow-x-auto w-full max-w-7xl mx-auto">
-       <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 mb-10 ">
-        <span className="text-gray-500 font-semibold text-sm ml-12">Compare</span>
-      <div className="flex items-center gap-2 text-gray-500 mr-2.5">
-        <a href="#" className="text-sm hover:text-green-500">Home</a>
-        <span className="text-gray-400 text-sm">›</span>
-        <span className="text-green-500 font-medium text-sm">Compare</span>
+    <div className="max-w-5xl mx-auto p-6">
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">So sánh sản phẩm</h2>
+
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-10">
+        {[1, 2].map((num) => {
+          const productId = selectedProductIds[`p${num}` as "p1" | "p2"];
+          const variantId = selectedVariantIds[`v${num}` as "v1" | "v2"];
+          const variants = variantsMap[productId] || [];
+
+          return (
+            <div key={num}>
+              <label className="block mb-1 text-sm font-medium text-gray-700">Chọn sản phẩm {num}</label>
+              <select
+                value={productId}
+                onChange={(e) => {
+                  setSelectedProductIds((prev) => ({ ...prev, [`p${num}`]: e.target.value }));
+                  setSelectedVariantIds((prev) => ({ ...prev, [`v${num}`]: "" }));
+                }}
+                className="w-full border rounded px-3 py-2 mb-2"
+              >
+                <option value="">-- Chọn sản phẩm --</option>
+                {products.map((p) => (
+                  <option key={p._id} value={p._id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+
+              {productId && (
+                <>
+                  <label className="block mb-1 text-sm font-medium text-gray-700">Chọn biến thể</label>
+                  <select
+                    value={variantId}
+                    onChange={(e) => setSelectedVariantIds((prev) => ({ ...prev, [`v${num}`]: e.target.value }))}
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value="">-- Chọn biến thể --</option>
+                    {variants.map((v) => (
+                      <option key={v._id} value={v._id}>
+                        {v.color} - {v.size}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
-      </div>
-      <div className="px-4">
-      <table className="w-full border border-gray-200 text-left text-xs sm:text-sm px-4">
-        <tbody>
-          {/* Product Image Row */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">Product Image</td>
-            <td className="border border-gray-200 p-3 relative">
-              <img
-                src="https://storage.googleapis.com/a1aa/image/fd3fafa1-7838-4b14-1780-912f18f5a36b.jpg"
-                alt="Product 1"
-                className="mx-auto"
-                width={100}
-                height={80}
-              />
-              <p className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-base">X</p>
-            </td>
-            <td className="border border-gray-200 p-3 relative">
-              <img
-                src="https://storage.googleapis.com/a1aa/image/1ab6025d-fc49-403f-1d29-cce59cb2c1dc.jpg"
-                alt="Product 2"
-                className="mx-auto"
-                width={100}
-                height={80}
-              />
-              <p className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-base">X</p>
-            </td>
-            <td className="border border-gray-200 p-3 relative">
-              <img
-                src="https://storage.googleapis.com/a1aa/image/105125dc-5e72-4054-fe06-226dc83f8625.jpg"
-                alt="Product 3"
-                className="mx-auto"
-                width={100}
-                height={80}
-              />
-              <p className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-base">X</p>
-            </td>
-          </tr>
 
-          {/* Name Row */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">Name</td>
-        <td className="border border-gray-200 p-3 text-gray-500 ">Long lasting perfume</td>
-            <td className="border border-gray-200 p-3 text-gray-500">Men's stylish printed shirt</td>
-            <td className="border border-gray-200 p-3 text-gray-500">Blue berry</td>
-          </tr>
+      {variants.v1 && variants.v2 ? (
+<div className="overflow-x-auto w-full">
+<table className="min-w-[600px] w-full border border-gray-200 text-sm text-left bg-white shadow-md rounded-md overflow-hidden">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-3 font-semibold">Thuộc tính</th>
+                <th className="p-3 font-semibold text-blue-600">Sản phẩm 1</th>
+                <th className="p-3 font-semibold text-green-600">Sản phẩm 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { label: "Ảnh", key: "image" },
+                { label: "Tên sản phẩm", key: "product_id" },
+                { label: "SKU", key: "sku" },
+                { label: "Giá", key: "price" },
+                { label: "Size", key: "size" },
+                { label: "Màu", key: "color" },
+              ].map((row) => (
+                <tr key={row.key} className="border-t">
+                  <td className="p-3 font-medium">{row.label}</td>
+               <td className="p-3">
+  {row.key === "image" ? (
+    <img src={variants.v1?.image} alt="" className="w-30" />
+  ) : (
+    renderValue(variants.v1, row.key as keyof IProductVariant)
+  )}
+</td>
+<td className="p-3">
+  {row.key === "image" ? (
+    <img src={variants.v2?.image} alt="" className="w-30" />
+  ) : (
+    renderValue(variants.v2, row.key as keyof IProductVariant)
+  )}
+</td>
 
-          {/* Category Row */}
-          <tr>
-              <td className="border border-gray-200 p-3 font-semibold text-gray-700">Category</td>
-              <td className="border border-gray-200 p-3 text-gray-500">perfume</td>
-              <td className="border border-gray-200 p-3 text-gray-500">men's wear</td>
-              <td className="border border-gray-200 p-3 text-gray-500">Fresh Fruits</td>
-          </tr>
+                </tr>
+              ))}
 
-         {/* Ratings Row */}
-<tr>
-  <td className="border border-gray-200 p-3 font-semibold text-gray-700">Ratings</td>
-
-  <td className="border border-gray-200 p-3">
-    <div className="flex items-center space-x-1">
-      <div className="text-orange-500 flex">
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-        <i className="fas fa-star-half-alt" />
-      </div>
-      <span className="text-gray-400 whitespace-nowrap">(20.1k reviews)</span>
-    </div>
+              <tr className="border-t bg-gray-50">
+  <td className="p-3 font-medium">Thao tác</td>
+  <td className="p-3">
+    <button
+      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      onClick={() => handleAddToCart(variants.v1?._id, selectedProductIds.p1)}
+      disabled={!variants.v1}
+    >
+      Thêm vào giỏ
+    </button>
   </td>
-
-  <td className="border border-gray-200 p-3">
-    <div className="flex items-center space-x-1">
-      <div className="text-orange-500 flex">
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-        <i className="fas fa-star-half-alt" />
-      </div>
-      <span className="text-gray-400 whitespace-nowrap">(8k reviews)</span>
-    </div>
-  </td>
-
-  <td className="border border-gray-200 p-3">
-    <div className="flex items-center space-x-1">
-      <div className="text-orange-500 flex">
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-        <i className="fas fa-star" />
-      </div>
-      <span className="text-gray-400 whitespace-nowrap">(4k reviews)</span>
-    </div>
+  <td className="p-3">
+    <button
+      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      onClick={() => handleAddToCart(variants.v2?._id, selectedProductIds.p2)}
+      disabled={!variants.v2}
+    >
+      Thêm vào giỏ
+    </button>
   </td>
 </tr>
 
-
-          {/* Availability */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">Availability</td>
-            <td className="border border-gray-200 p-3 text-red-400">Out Of Stock</td>
-            <td className="border border-gray-200 p-3 text-green-500">Available</td>
-            <td className="border border-gray-200 p-3 text-red-400">Out Of Stock</td>
-          </tr>
-
-          {/* Location */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">Location</td>
-            <td className="border border-gray-200 p-3 text-gray-500">in Store, Online</td>
-            <td className="border border-gray-200 p-3 text-gray-500">Online</td>
-            <td className="border border-gray-200 p-3 text-gray-500">Online</td>
-          </tr>
-
-          {/* Brand */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">Brand</td>
-            <td className="border border-gray-200 p-3 text-gray-500">Bhisma Organics</td>
-            <td className="border border-gray-200 p-3 text-gray-500">Bhisma Organics</td>
-            <td className="border border-gray-200 p-3 text-gray-500">Bhisma Organics</td>
-          </tr>
-
-          {/* SKU */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">SKU</td>
-            <td className="border border-gray-200 p-3 text-gray-500">556515</td>
-            <td className="border border-gray-200 p-3 text-gray-500">24423</td>
-            <td className="border border-gray-200 p-3 text-gray-500">25458</td>
-          </tr>
-
-          {/* Quantity */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">Quantity</td>
-            <td className="border border-gray-200 p-3 text-gray-500">1 Pack</td>
-            <td className="border border-gray-200 p-3 text-gray-500">1 Pack</td>
-            <td className="border border-gray-200 p-3 text-gray-500">1 Pack</td>
-          </tr>
-
-          {/* Weight */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700">Weight</td>
-            <td className="border border-gray-200 p-3 text-gray-500">5 pcs</td>
-            <td className="border border-gray-200 p-3 text-gray-500">1 pcs</td>
-            <td className="border border-gray-200 p-3 text-gray-500">500 g</td>
-          </tr>
-
-          {/* Description */}
-          <tr>
-            <td className="border border-gray-200 p-3 font-semibold text-gray-700 align-top">Description</td>
-            <td className="border border-gray-200 p-3 max-w-[160px] text-gray-500">
-              Recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-            </td>
-            <td className="border border-gray-200 p-3 max-w-[160px] text-gray-500">
-              Recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-            </td>
-            <td className="border border-gray-200 p-3 max-w-[160px] text-gray-500">
-              Recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-center text-gray-500 py-10">Vui lòng chọn đủ 2 biến thể để so sánh.</p>
+      )}
     </div>
   );
 };

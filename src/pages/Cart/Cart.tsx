@@ -218,17 +218,18 @@ const displayedProducts = showAll ? viewedProducts : viewedProducts.slice(0, 5);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
-      <h2 className="text-lg font-semibold mb-4">Your shopping cart</h2>
+      <h2 className="text-lg font-semibold mb-4">Giỏ hàng của bạn</h2>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm border border-gray-200 rounded">
             <thead className="bg-gray-100">
               <tr>
-                <th className="p-2 text-center">Select</th>
-                <th className="p-2 text-left">Product</th>
-                <th className="p-2 text-center">Price</th>
-                <th className="p-2 text-center">Quantity</th>
-                <th className="p-2 text-center">Total</th>
+                <th className="p-2 text-center">Chọn</th>
+                <th className="p-2 text-left">Sản phẩm</th>
+                <th className="p-2 text-center">Giá</th>
+                <th className="p-2 text-center">Số lượng</th>
+                <th className="p-2 text-center">Tổng tiền</th>
                 <th className="p-2 text-center">Action</th>
               </tr>
             </thead>
@@ -302,37 +303,37 @@ const displayedProducts = showAll ? viewedProducts : viewedProducts.slice(0, 5);
               })}
             </tbody>
           </table>
-
+        </div>
           <div className="mt-4 flex justify-end">
             <a
               href="/"
               className="text-sm text-blue-600 hover:underline inline-flex items-center"
             >
-              ← Continue Shopping
+              ← Tiếp tục mua sắm
             </a>
           </div>
         </div>
 
         {/* Summary */}
         <div className="bg-white border border-gray-200 rounded p-4 space-y-2">
-          <h3 className="font-semibold text-lg">Summary</h3>
+          <h3 className="font-semibold text-lg">Tóm tắt</h3>
           <div className="flex justify-between">
-            <span>Provisional ({totalItems} product)</span>
+            <span>Tạm thời ({totalItems} sản phẩm)</span>
             <span>{formatVND(totalAmount)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Delivery Charges</span>
+            <span>Phí giao hàng</span>
             <span>{formatVND(deliveryCharges)}</span>
           </div>
           <div className="flex justify-between font-semibold pt-2 border-t">
-            <span>Total</span>
+            <span>Tổng</span>
             <span>{formatVND(totalWithDelivery)}</span>
           </div>
           <button
             onClick={handleCheckout}
             className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 mt-4"
           >
-            Checkout
+            Thanh toán
           </button>
         </div>
       </div>

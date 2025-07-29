@@ -276,7 +276,7 @@ useEffect(() => {
 
         {/* Search Bar */}
         <div className="flex-1 flex justify-center ml-30">
-          <div className="relative w-[500px] z-50" ref={wrapperRef}>
+          <div className="relative w-full max-w-md z-50" ref={wrapperRef}>
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
@@ -483,6 +483,9 @@ useEffect(() => {
   <Link to="/blog" className="relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-green-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 transition text-gray-700">
     Tin tức
   </Link>
+   <Link to="/compare" className="relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-green-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 transition text-gray-700">
+    So sánh
+  </Link>
   <Link to="/lien_he" className="relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-green-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 transition text-gray-700">
     Liên hệ
   </Link>
@@ -491,9 +494,9 @@ useEffect(() => {
 
 
           {/* Right - Location */}
-          <button className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm">
+          <button className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm ">
             <i className="fas fa-map-marker-alt text-white"></i>
-            <p className="text-white pt-2.5 pr-4">Việt Nam</p>
+            <p className="text-white pt-2.5 pr-4 ">Việt Nam</p>
             <i className="fas fa-chevron-down text-[10px] text-white"></i>
           </button>
         </div>

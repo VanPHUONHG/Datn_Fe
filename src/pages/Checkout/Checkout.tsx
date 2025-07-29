@@ -419,7 +419,19 @@ return (
           </button>
         </div>
       </div>
+      
     </div>
+<div className="flex justify-center mt-8">
+  <p className="flex items-center gap-2 text-sm text-gray-700 bg-blue-50 border border-blue-200 rounded-lg px-6 py-3 shadow max-w-3xl w-full justify-center text-center">
+    <span className="animate-bounce text-xl">📧</span>
+    <span>
+      Thông tin đơn hàng sẽ được gửi qua email. Nhà cung cấp sẽ liên hệ với bạn qua số điện thoại.
+    </span>
+  </p>
+</div>
+
+
+
   </div>
 );
 

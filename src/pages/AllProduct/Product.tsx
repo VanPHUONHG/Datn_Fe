@@ -72,8 +72,8 @@ function AllProducts() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="flex gap-6">
-       <div className="w-64 p-4 bg-white rounded-lg shadow space-y-6 border border-gray-200">
+<div className="flex flex-col lg:flex-row gap-6 px-4">
+<div className="w-full lg:w-64 p-4 bg-white rounded-lg shadow space-y-6 border border-gray-200">
 
     <div>
       <h3
