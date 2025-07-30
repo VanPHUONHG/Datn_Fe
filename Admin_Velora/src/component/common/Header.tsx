@@ -25,39 +25,32 @@ const AdminHeader = () => {
     logout();
   };
 
-
   return (
-    <div className="bg-white w-full shadow-md flex p-4 relative z-50">
-      <div className="logo w-1/5 font-bold text-xl">Velora</div>
+    <div className="bg-gradient-to-r from-blue-100 via-white to-blue-100 w-full shadow-md flex p-4 relative z-50 border-b border-blue-100">
+<div className="logo w-1/5 font-bold text-2xl text-blue-700 tracking-wide ml-4 hover:scale-105 transition-transform duration-200">
+  Velora
+</div>
 
-      <div className="right-header w-4/5 flex justify-between items-center">
-        <form>
-          <input
-            className="border rounded-md w-[350px] px-2 py-1"
-            type="text"
-            placeholder="Tìm kiếm"
-          />
-        </form>
-
+      <div className="right-header w-4/5 flex justify-end items-center">
         <div className="flex items-center gap-6">
           {adminUser ? (
             <>
               <ul>
-                <li>Xin chào {adminUser.full_name}</li>
+                <li className="text-gray-700 font-medium">👋 Xin chào <span className="font-semibold text-blue-600">{adminUser.full_name}</span></li>
               </ul>
 
               <div
                 onClick={handleLogout}
-                className="flex items-center space-x-2 cursor-pointer hover:text-gray-900 select-none"
+                className="flex items-center space-x-2 cursor-pointer hover:text-red-600 select-none transition duration-200 ease-in-out"
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && handleLogout()}
               >
                 <i className="fas fa-sign-out-alt text-[20px]"></i>
                 <div className="leading-none">
-                  <div>Account</div>
+                  <div className="text-gray-600">Account</div>
                   <div
-                    className="font-semibold text-[13px]"
+                    className="font-semibold text-[13px] text-red-500 hover:underline"
                     style={{ fontFamily: "'Poppins', sans-serif" }}
                   >
                     ĐĂNG XUẤT
@@ -66,7 +59,12 @@ const AdminHeader = () => {
               </div>
             </>
           ) : (
-            <Link to="/admin/login">LOGIN</Link>
+            <Link
+              to="/admin/login"
+              className="text-blue-600 font-medium hover:underline transition duration-150"
+            >
+              LOGIN
+            </Link>
           )}
         </div>
       </div>

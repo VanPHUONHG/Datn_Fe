@@ -193,18 +193,23 @@ const AdminSidebar = () => {
     }
   };
 
-  return (
-    <div className="w-1/5 h-screen bg-white">
-      <Menu
-        onClick={onClick}
-        style={{ width: '100%' }}
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
-        mode="inline"
-        items={items}
-      />
-    </div>
-  );
+ return (
+<div className="w-1/5 h-screen bg-blue-10 shadow-md border-r border-blue-200">
+    <Menu
+      onClick={onClick}
+      style={{
+        width: '100%',
+        background: 'transparent',
+        border: 'none',
+      }}
+      defaultSelectedKeys={['1']}
+      defaultOpenKeys={['sub1']}
+      mode="inline"
+      items={items}
+    />
+  </div>
+);
+
 };
 
 export default AdminSidebar;

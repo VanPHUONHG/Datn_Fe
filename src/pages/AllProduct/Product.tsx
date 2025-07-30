@@ -9,6 +9,8 @@ const COLORS = [
   { value: 'Xanh', label: 'Xanh' },
   { value: 'Đỏ', label: 'Đỏ' },
   { value: 'Nâu', label: 'Nâu' },
+  { value: 'Hồng', label: 'Hồng' },
+
 ];
 
 function AllProducts() {

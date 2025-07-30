@@ -64,22 +64,31 @@ function Checkout() {
 
     const deliveryCharges = 32000;
 
-    const handleApplyCoupon = async () => {
-        try {
-            setCouponError(null);
-            const result = await validateCouponForUser(couponCode.trim());
-            if (result.valid) {
-                setCoupon(result.data);
-            } else {
-                setCoupon(null);
-                setCouponError(result.message || "Mã không hợp lệ.");
-            }
-        } catch (error: any) {
-            const errMessage = error?.message || "Không thể áp dụng mã giảm giá.";
-            setCoupon(null);
-            setCouponError(errMessage);
-        }
-    };
+  const handleApplyCoupon = async () => {
+  try {
+    setCouponError(null);
+    const result = await validateCouponForUser(couponCode.trim());
+    if (result.valid) {
+      const couponData = result.data;
+      // 👉 Kiểm tra điều kiện đơn hàng tối thiểu bao nhiu tiền thì ms áp đc mã giảm giá đó
+      if (couponData.min_purchase  && totalAmount < couponData.min_purchase) {
+        setCoupon(null);
+        setCouponError(`Đơn hàng tối thiểu phải đạt ${formatVND(couponData.min_purchase )} để áp dụng mã này.`);
+        return;
+      }
+
+      setCoupon(couponData);
+    } else {
+      setCoupon(null);
+      setCouponError(result.message || "Mã không hợp lệ.");
+    }
+  } catch (error: any) {
+    const errMessage = error?.message || "Không thể áp dụng mã giảm giá.";
+    setCoupon(null);
+    setCouponError(errMessage);
+  }
+};
+
 
 
     // ✅ Lấy user từ location.state thay vì gọi lại API

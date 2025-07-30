@@ -9,6 +9,16 @@ const CouponList = () => {
   const [expiredCoupons, setExpiredCoupons] = useState<ICoupon[]>([]);
   const [loading, setLoading] = useState(false);
 
+const getDiscountTypeText = (type: "percent" | "fixed") => {
+  switch (type) {
+    case "percent":
+      return "Phần trăm";
+    case "fixed":
+      return "Cố định";
+    default:
+      return type;
+  }
+};
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
@@ -92,7 +102,7 @@ const CouponList = () => {
               <tr key={coupon._id} className="even:bg-gray-50 hover:bg-gray-100">
                 <td className="border px-4 py-2">{index + 1}</td>
                 <td className="border px-4 py-2">{coupon.code}</td>
-                <td className="border px-4 py-2">{coupon.discount_type}</td>
+                <td className="border px-4 py-2">{getDiscountTypeText(coupon.discount_type)}</td>
                 <td className="border px-4 py-2">{coupon.discount_value}</td>
                 <td className="border px-4 py-2">{coupon.max_discount}</td>
                 <td className="border px-4 py-2">{coupon.min_purchase}</td>
