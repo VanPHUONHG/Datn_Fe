@@ -43,9 +43,12 @@ const parseCurrency = (value: string) => {
   const filteredOrders = orders.filter((order) => {
     const matchesStatus = statusFilter ? order.status === statusFilter : true;
 
-    const matchesSearch =
-      typeof order.user !== "string" &&
-      order.user.full_name.toLowerCase().includes(searchTerm.toLowerCase());
+const matchesSearch = !searchTerm || (
+  typeof order.user !== "string" &&
+  order.user &&
+  order.user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
 
     const matchesDate =
       !dateRange ||
@@ -74,7 +77,7 @@ const exportToExcel = (data: IOrder[]) => {
 
     return {
       "Mã đơn": order._id,
-"Tên khách": typeof order.user === "string" ? "Guest" : (order.user as any).full_name,
+"Tên khách": typeof order.user === "string" || !order.user ? "Guest" : (order.user as any).full_name,
       "SĐT": order.shippingAddress?.phone || "N/A",
       "Tổng tiền": order.finalAmount,
       "Ngày đặt": dayjs(order.createdAt).format("DD/MM/YYYY"),
@@ -104,7 +107,9 @@ const exportToPDF = () => {
 
   const rows = filteredOrders.map((order, index) => [
     index + 1,
-    removeVietnameseTones(typeof order.user === "string" ? "N/A" : order.user.full_name),
+removeVietnameseTones(
+  typeof order.user === "string" || !order.user ? "N/A" : order.user.full_name
+),
     order.shippingAddress?.phone || "N/A",
     order.finalAmount.toLocaleString() + " đ",
     order.createdAt ? dayjs(order.createdAt).format("DD/MM/YYYY") : "N/A",
@@ -119,6 +124,7 @@ const exportToPDF = () => {
 
   doc.save("don_hang.pdf");
 };
+
 
 
   return (
@@ -231,7 +237,9 @@ const exportToPDF = () => {
             currentOrders.map((order, idx) => (
               <tr key={order._id} className="even:bg-gray-50 hover:bg-gray-100 transition-colors">
                 <td className="border px-4 py-2">{(page - 1) * perPage + idx + 1}</td>
-                <td className="border px-4 py-2">{typeof order.user === "string" ? "N/A" : order.user.full_name}</td>
+<td className="border px-4 py-2">
+  {typeof order.user === "string" || !order.user ? "Người dùng đã bị xóa" : order.user.full_name}
+</td>
                 <td className="border px-4 py-2">{order.shippingAddress?.phone || "N/A"}</td>
                 <td className="border px-4 py-2">{order.finalAmount.toLocaleString()} ₫</td>
                 <td className="border px-4 py-2">{order.createdAt ? dayjs(order.createdAt).format("DD/MM/YYYY") : "N/A"}</td>
@@ -241,9 +249,16 @@ const exportToPDF = () => {
                     <Link to={`/admin/order-detail/${order._id}`} className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
                       Chi tiết
                     </Link>
-                    <Link to={`/admin/order-update/${order._id}`} className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                      Cập nhật
-                    </Link>
+              {typeof order.user !== "string" && order.user ? (
+  <Link to={`/admin/order-update/${order._id}`} className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+    Cập nhật
+  </Link>
+) : (
+  <span className="px-3 py-1 bg-gray-300 text-gray-600 rounded cursor-not-allowed">
+    Không thể cập nhật
+  </span>
+)}
+
                   </div>
                 </td>
               </tr>

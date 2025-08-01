@@ -10,4 +10,5 @@ export interface User {
   role: "customer" | "admin";
   created_at: string;
   updated_at: string;
+  is_deleted?: boolean;
 }

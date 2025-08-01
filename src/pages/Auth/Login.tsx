@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { login } from '../../api/authAPI';
 import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 
 const Login: React.FC = () => {
   const [form, setForm] = useState({ username: '', password: '' });
+   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,14 +52,22 @@ const Login: React.FC = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
             />
 
-            <input
-              name="password"
-              type="password"
-              placeholder="Mật khẩu"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
-            />
+            <div className="relative">
+              <input
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Mật khẩu"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
+              />
+              <div
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+    {showPassword ? <EyeInvisibleOutlined style={{ fontSize: 20 }} /> : <EyeOutlined style={{ fontSize: 20 }} />}
+              </div>
+            </div>
 
             <button
               type="submit"

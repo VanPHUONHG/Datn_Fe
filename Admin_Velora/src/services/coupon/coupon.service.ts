@@ -64,3 +64,14 @@ export const validateCouponForUser = async (code: string) => {
     throw error;
   }
 };
+
+//Xóa vĩnh viễn
+export const permanentlyDeleteCoupon = async (id: string) => {
+  try {
+    const res = await axios.delete(`${API_URL}/coupons/permanent/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi khi xoá vĩnh viễn coupon:", error);
+    throw error;
+  }
+};

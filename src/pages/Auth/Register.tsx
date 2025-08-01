@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { signup } from '../../api/authAPI';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 
 const Register: React.FC = () => {
   const [form, setForm] = useState({
@@ -14,6 +15,7 @@ const Register: React.FC = () => {
     address: '',
   });
   const navigate = useNavigate();
+const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,7 +50,6 @@ const Register: React.FC = () => {
             {[
               { name: 'username', placeholder: 'Tên người dùng' },
               { name: 'email', placeholder: 'Email', type: 'email' },
-              { name: 'password', placeholder: 'Mật khẩu', type: 'password' },
               { name: 'full_name', placeholder: 'Họ và tên' },
               { name: 'phone', placeholder: 'Số điện thoại' },
               { name: 'address', placeholder: 'Địa chỉ' },
@@ -63,6 +64,23 @@ const Register: React.FC = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
               />
             ))}
+
+<div className="relative">
+    <input
+      name="password"
+      type={showPassword ? 'text' : 'password'}
+      placeholder="Mật khẩu"
+      value={form.password}
+      onChange={handleChange}
+      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:border-blue-400"
+    />
+    <div
+      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? <EyeInvisibleOutlined style={{ fontSize: 20 }} /> : <EyeOutlined style={{ fontSize: 20 }} />}
+    </div>
+  </div>
 
             <button
               type="submit"

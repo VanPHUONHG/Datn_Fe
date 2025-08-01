@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Popconfirm, message } from "antd";
 import { Link } from "react-router-dom";
-import { getAllCoupons, updateCoupon } from "services/coupon/coupon.service";
+import { getAllCoupons, permanentlyDeleteCoupon, updateCoupon } from "services/coupon/coupon.service";
 import type { ICoupon } from "types/coupon";
 import { DeleteOutlined, RollbackOutlined } from "@ant-design/icons";
 
@@ -40,7 +40,17 @@ const CouponDelete = () => {
     }
   };
 
- 
+ const handlePermanentDelete = async (id: string) => {
+  try {
+    await permanentlyDeleteCoupon(id);
+    message.success("Đã xóa vĩnh viễn mã khuyến mãi");
+    setDeletedCoupons((prev) => prev.filter((coupon) => coupon._id !== id));
+  } catch (error) {
+    console.error("Lỗi khi xóa vĩnh viễn:", error);
+    message.error("Xoá vĩnh viễn thất bại");
+  }
+};
+
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
@@ -116,23 +126,30 @@ const CouponDelete = () => {
                     <span className="text-red-600 font-medium">✘</span>
                   </td>
                   <td className="border px-4 py-2">
-                    <div className="flex gap-2 justify-center">
-                     
-                      <Popconfirm
-                        title="Bạn có muốn khôi phục mã này không?"
-                        onConfirm={() => handleRestore(coupon._id)}
-                        okText="Khôi phục"
-                        cancelText="Huỷ"
-                      >
-                        <Button
-                          type="primary"
-                          size="small"
-                          icon={<RollbackOutlined />}
-                        >
-                          Khôi phục
-                        </Button>
-                      </Popconfirm>
-                    </div>
+                   <div className="flex gap-2 justify-center">
+  <Popconfirm
+    title="Bạn có muốn khôi phục mã này không?"
+    onConfirm={() => handleRestore(coupon._id)}
+    okText="Khôi phục"
+    cancelText="Huỷ"
+  >
+    <Button type="primary" size="small" icon={<RollbackOutlined />}>
+      Khôi phục
+    </Button>
+  </Popconfirm>
+
+  <Popconfirm
+    title="Xóa vĩnh viễn? Hành động này không thể hoàn tác."
+    onConfirm={() => handlePermanentDelete(coupon._id)}
+    okText="Xóa"
+    cancelText="Huỷ"
+  >
+    <Button danger size="small" icon={<DeleteOutlined />}>
+      Xóa
+    </Button>
+  </Popconfirm>
+</div>
+
                   </td>
                 </tr>
               ))

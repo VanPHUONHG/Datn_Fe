@@ -14,7 +14,6 @@ const UserEdit = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<"active" | "banned">("active");
   
-  console.log("status hiện tại:", status);
 
 
   useEffect(() => {

@@ -1,6 +1,8 @@
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { message, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllUsers } from "services/user/user.service";
+import { getAllUsers, softDeleteUser } from "services/user/user.service";
 import type { User } from "types/user";
 
 const UserList = () => {
@@ -21,9 +23,13 @@ const UserList = () => {
     const fetchUsers = async () => {
       try {
         const res = await getAllUsers();
-        console.log("👀 Kết quả từ getAllUsers trong UserList.tsx:", res);
-        setUsers(res);
-      } catch (error) {
+ // Sắp xếp giảm dần theo thời gian tạo (người mới lên đầu)
+    const sortedUsers = [...res].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    setUsers(sortedUsers);
+        } catch (error) {
         console.error("Lỗi khi lấy danh sách người dùng:", error);
       } finally {
         setLoading(false);
@@ -42,6 +48,7 @@ const UserList = () => {
   // Lọc danh sách
   const filteredUsers = users
     .filter((user) => user.role !== "admin")
+    .filter((user) => !user.is_deleted)
     .filter((user) => {
       const keyword = search.toLowerCase();
       return (
@@ -61,9 +68,40 @@ const UserList = () => {
   const startIndex = (currentPage - 1) * usersPerPage;
   const currentUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
 
+  //Xử lý xóa mềm
+  const { confirm } = Modal;
+ const handleSoftDelete = (id: string) => {
+  confirm({
+    title: "Bạn có chắc chắn muốn xóa mềm người dùng này?",
+    icon: <ExclamationCircleOutlined />,
+    content: "Người dùng sẽ được đưa vào danh sách đã xóa và có thể khôi phục sau.",
+    okText: "Xác nhận",
+    okType: "danger",
+    cancelText: "Hủy",
+    async onOk() {
+      try {
+        await softDeleteUser(id);
+        setUsers((prev) => prev.filter((user) => user._id !== id));
+        message.success("Xóa mềm người dùng thành công!");
+      } catch (error) {
+        console.error("Lỗi khi xóa mềm người dùng:", error);
+        message.error("Đã xảy ra lỗi khi xóa mềm.");
+      }
+    },
+  });
+};
+
+
   return (
     <div className="p-4 bg-white rounded shadow">
       <h2 className="text-xl font-bold mb-4 text-green-600">Danh sách khách hàng</h2>
+<div className="mb-4 flex justify-end">
+  <Link to="/admin/user-deleted">
+    <button className="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded border border-red-300 transition">
+      Danh sách người dùng đã xóa mềm
+    </button>
+  </Link>
+</div>
 
       {/* Bộ lọc */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
@@ -126,6 +164,12 @@ const UserList = () => {
                       Sửa
                     </button>
                   </Link>
+                  <button
+  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+  onClick={() => handleSoftDelete(user._id)}
+>
+  Xoá
+</button>
                 </div>
               </td>
             </tr>

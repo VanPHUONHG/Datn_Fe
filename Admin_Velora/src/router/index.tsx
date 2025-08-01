@@ -50,6 +50,7 @@ import BannerList from "pages/Banner/BannerList";
 import BannerAdd from "pages/Banner/BannerAdd";
 import BannerEdit from "pages/Banner/BannerEdit";
 import Chat from "pages/Chat/Chat";
+import UserDelete from "pages/Account/UserDelete";
 
 export const router = createBrowserRouter([
   {
@@ -113,6 +114,7 @@ export const router = createBrowserRouter([
       { path: "order-update/:id", element: <OrderUpdate /> },
 
       // User
+      { path: "user-deleted", element: <UserDelete /> },
       { path: "user-list", element: <UserList /> },
       { path: "user-detail/:id", element: <UserDetail /> },
       { path: "user-edit/:id", element: <UserEdit /> },
@@ -127,6 +129,8 @@ export const router = createBrowserRouter([
 
       //Chat
       { path: "chat", element: <Chat /> },
+
+      
     ],
   },
 ]);

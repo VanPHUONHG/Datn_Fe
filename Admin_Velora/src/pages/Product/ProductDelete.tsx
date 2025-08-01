@@ -121,7 +121,13 @@ const ProductDelete = () => {
 {(item as any).category_id?.name || "Không có"}
                   </td>
                   <td className="border px-4 py-2 text-sm text-gray-600">
-  {item.deletedAt ? new Date(item.deletedAt).toLocaleDateString() : "Không rõ"}
+   {item.isDeleted && item.updatedAt
+                      ? new Date(item.updatedAt).toLocaleDateString("vi-VN", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                      : "Không rõ"}
 </td>
 <td className="border px-4 py-7 text-sm flex gap-3 justify-center">
   <Popconfirm
