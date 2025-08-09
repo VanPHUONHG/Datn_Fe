@@ -12,6 +12,8 @@ import type { IUser } from "types/user";
 import type { ICartItem } from "types/cart";
 import ProductReviewSection from "./ProductReviewSection";
 import { addToWishlist } from "services/wistlist/wistlist.service";
+import type { ICoupon } from "types/coupon";
+import { getAllCoupons } from "services/coupon/coupon.service";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -29,6 +31,8 @@ const ProductDetail = () => {
   const [previewVariant, setPreviewVariant] = useState<IProductVariant | null>(null);
   const displayedVariant = selectedVariant || previewVariant;
   const errorToastId = "add-to-cart-error";  //Báo lỗi toast khi giỏ hàng đã vượt quá giới hạn tồn kho
+
+    const [coupons, setCoupons] = useState<ICoupon[]>([]);
 
   const handleAddToWishlist = async () => {
     const userString = localStorage.getItem("user");
@@ -266,6 +270,51 @@ const ProductDetail = () => {
   }
 }, [product]);
 
+
+useEffect(() => {
+  const fetchCoupons = async () => {
+    try {
+      const res = await getAllCoupons();
+      const now = new Date();
+
+      let couponsData: ICoupon[] = [];
+
+      if (res && Array.isArray(res.data)) {
+        couponsData = res.data;
+      } else if (Array.isArray(res)) {
+        couponsData = res;
+      }
+
+      const validCoupons = couponsData.filter((coupon) => {
+        if (!coupon.is_active) return false;
+
+        // Nếu có ngày hết hạn thì check
+        if (coupon.end_date) {
+          const endDate = new Date(coupon.end_date);
+          return endDate >= now;
+        }
+
+        // Không có end_date thì vẫn tính là hợp lệ
+        return true;
+      });
+
+      setCoupons(validCoupons);
+    } catch (error) {
+      console.error("Không thể lấy coupon:", error);
+    }
+  };
+
+  fetchCoupons();
+}, []);
+
+
+  const formatDiscount = (coupon: ICoupon) => {
+    if (coupon.discount_type === "percent") {
+      return `${coupon.discount_value}%`;
+    }
+    return `${coupon.discount_value.toLocaleString()}₫`;
+  };
+
   if (loading) return <p className="text-center py-10">Đang tải dữ liệu...</p>;
   if (!product) return <p className="text-center py-10">Không tìm thấy sản phẩm</p>;
 
@@ -489,9 +538,83 @@ const ProductDetail = () => {
                 <i className="fas fa-heart"></i> Yêu thích
               </button>
             </div>
+            
+          </div>
+          
+        </div>
+        
+{/* Danh sách coupon */}
+{coupons.length > 0 && (
+  <div className="mt-4 bg-white p-4 rounded-lg shadow-md border border-gray-100">
+    {/* Tiêu đề */}
+    <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <span className="text-2xl animate-wiggle">🎁</span>
+      <span className="text-lg">Mã giảm giá của bạn</span>
+    </h3>
+
+    {/* Danh sách coupon */}
+    <div className="flex flex-col gap-3">
+      {coupons.map((coupon) => (
+        <div
+          key={coupon._id}
+          className="flex rounded-lg overflow-hidden border border-orange-400 shadow-sm hover:shadow-md transition bg-white"
+        >
+          {/* Phần trái - phần trăm giảm */}
+          <div className="bg-orange-500 text-white w-24 flex flex-col justify-center items-center p-3">
+            <div className="text-xl font-extrabold leading-none">
+              {coupon.discount_type === "percent"
+                ? `${coupon.discount_value}%`
+                : `${coupon.discount_value.toLocaleString()}₫`}
+            </div>
+            <div className="text-xs mt-1">GIẢM</div>
+          </div>
+
+          {/* Phần phải - chi tiết */}
+          <div className="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div className="text-sm font-semibold text-gray-800 uppercase">
+                {coupon.code}
+              </div>
+              {coupon.min_purchase && (
+                <div className="text-xs text-gray-600">
+                  Đơn tối thiểu: {coupon.min_purchase.toLocaleString()}₫
+                </div>
+              )}
+              {coupon.discount_type === "percent" &&
+                coupon.max_discount &&
+                coupon.max_discount > 0 && (
+                  <div className="text-xs text-gray-600">
+                    Giảm tối đa: {coupon.max_discount.toLocaleString()}₫
+                  </div>
+                )}
+            </div>
+
+            {/* Ngày hiệu lực + trạng thái */}
+            <div className="flex items-center justify-between text-xs text-gray-500 mt-2">
+              <span>
+                {coupon.start_date
+                  ? new Date(coupon.start_date).toLocaleDateString("vi-VN")
+                  : "—"}{" "}
+                -{" "}
+                {coupon.end_date
+                  ? new Date(coupon.end_date).toLocaleDateString("vi-VN")
+                  : "—"}
+              </span>
+              <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full">
+                Đang hoạt động
+              </span>
+            </div>
           </div>
         </div>
+      ))}
+    </div>
+  </div>
+)}
+
+
+
       </div>
+      
       <ProductReviewSection />
       {/* Sản phẩm liên quan */}
       <div className="mt-12">

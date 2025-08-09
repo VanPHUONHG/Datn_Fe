@@ -59,7 +59,7 @@ const BlogCategoryList = () => {
           {currentCategories.length === 0 ? (
             <tr>
               <td colSpan={4} className="text-center py-6 text-gray-500">
-                Không có danh mục nào
+                Đang tải danh mục
               </td>
             </tr>
           ) : (

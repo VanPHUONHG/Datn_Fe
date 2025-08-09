@@ -65,7 +65,7 @@ function Home() {
             <h1 className="text-gray-800 text-2xl font-extrabold">
               Khám phá <span className="text-green-500 font-normal">bộ sưu tập</span>
             </h1>
-            <p className="text-gray-500 text-sm mt-1">Mới & Hot</p>
+            <p className="text-gray-500 text-sm mt-1">Sẵn sàng để khám phá</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -129,9 +129,9 @@ function Home() {
             </div>
           )}
         </div>
-
-        <ServicesRow />
+        
         <Trending />
+        <ServicesRow />
 
         {showScrollTop && (
           <button

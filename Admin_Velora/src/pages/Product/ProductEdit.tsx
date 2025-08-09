@@ -212,7 +212,7 @@ setImageFiles((prev) => [...prev, ...validImages]);
         </div>
 
         <div className="md:col-span-2 text-center mt-4">
-          <button type="submit" className="bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-6 rounded">
+          <button type="submit" className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded">
             Cập nhật
           </button>
         </div>

@@ -25,6 +25,15 @@ const OrderList = () => {
   const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(null);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
+  const statusColors: Record<string, { bg: string; text: string }> = {
+  pending: { bg: "bg-yellow-100", text: "text-yellow-800" },
+  confirmed: { bg: "bg-blue-100", text: "text-blue-800" },
+  shipping: { bg: "bg-purple-100", text: "text-purple-800" },
+  completed: { bg: "bg-green-100", text: "text-green-800" },
+  cancelled: { bg: "bg-red-100", text: "text-red-800" },
+};
+
+
   useEffect(() => {
     getAllOrdersAdmin()
       .then(setOrders)
@@ -230,7 +239,7 @@ removeVietnameseTones(
           {currentOrders.length === 0 ? (
             <tr>
               <td colSpan={7} className="text-center py-6 text-gray-500">
-                Không tìm thấy đơn hàng nào
+                 Đang tải đơn hàng
               </td>
             </tr>
           ) : (
@@ -243,7 +252,20 @@ removeVietnameseTones(
                 <td className="border px-4 py-2">{order.shippingAddress?.phone || "N/A"}</td>
                 <td className="border px-4 py-2">{order.finalAmount.toLocaleString()} ₫</td>
                 <td className="border px-4 py-2">{order.createdAt ? dayjs(order.createdAt).format("DD/MM/YYYY") : "N/A"}</td>
-                <td className="border px-4 py-2 capitalize">{ORDER_STATUS_VI[order.status as keyof typeof ORDER_STATUS_VI] || "Không rõ"}</td>
+<td className="border px-4 py-2">
+  {(() => {
+    const statusKey = String(order.status); // Ép thành string an toàn
+    const colors = statusColors[statusKey] || { bg: "bg-gray-100", text: "text-gray-800" };
+
+    return (
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${colors.bg} ${colors.text}`}
+      >
+        {ORDER_STATUS_VI[statusKey as keyof typeof ORDER_STATUS_VI] || "Không rõ"}
+      </span>
+    );
+  })()}
+</td>
                 <td className="border px-4 py-2">
                   <div className="flex gap-3">
                     <Link to={`/admin/order-detail/${order._id}`} className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">

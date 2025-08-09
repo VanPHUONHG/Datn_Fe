@@ -187,7 +187,7 @@ const totalPages = Math.ceil(filteredVariants.length / perPage);
         <tbody>
           {currentVariants.length === 0 ? (
             <tr>
-              <td colSpan={12} className="text-center py-6 text-gray-500">Không có biến thể nào</td>
+              <td colSpan={12} className="text-center py-6 text-gray-500">Đang tải biến thể</td>
             </tr>
           ) : (
             currentVariants.map((item, index) => (

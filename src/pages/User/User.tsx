@@ -3,8 +3,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { getUserById } from 'services/user/user.service';
 import type { IUser } from 'types/user';
 import { Spin, message } from 'antd';
-import { EditOutlined } from "@ant-design/icons";
-
+import { EditOutlined, ShoppingCartOutlined, GiftOutlined } from "@ant-design/icons";
 
 const User = () => {
   const navigate = useNavigate();
@@ -37,50 +36,57 @@ const User = () => {
   if (!user) return <div className="text-center text-red-500">Không tìm thấy người dùng</div>;
 
   return (
-    <div className="bg-gray-50 font-sans text-sm text-gray-800 h-screen flex">
-      <div className="max-w-[1250px] w-full mx-auto flex border border-gray-200 rounded shadow-sm overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white font-sans text-sm">
+      <div className="max-w-[1250px] w-full mx-auto py-6 px-4 lg:px-0">
+        <div className="flex rounded-2xl overflow-hidden shadow-lg border border-green-100 bg-white">
 
-        {/* Sidebar */}
-        <aside className="flex-shrink-0 w-60 bg-gray-100 border-r border-gray-200 p-5 flex flex-col overflow-y-auto">
-          {/* Avatar & Name */}
-           <div className="flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 text-xl">
-                            <img src="https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-image-700-205124837.jpg" alt=""  className='rounded-full'/>
-                        </div>
-           <div className="flex flex-col">
-                <Link to='/user/profile'>
-                  <span className="font-semibold truncate max-w-[130px]">{user.full_name}</span>
-                </Link>
-                <Link to='/user/profile/edit'>
-                  <button className="pt-0.5 text-xs text-gray-500 hover:text-gray-900 flex items-center gap-1 cursor-pointer">
-                    <EditOutlined className="text-[14px]" />
-                    Sửa Hồ Sơ
-                  </button>
-                </Link>
-
+          {/* Sidebar */}
+          <aside className="flex-shrink-0 w-64 bg-gradient-to-b from-green-100 to-white border-r border-green-100 p-6 flex flex-col">
+            {/* Avatar & Name */}
+            <div className="flex flex-col items-center mb-8">
+              <div className="relative w-20 h-20">
+                <img
+                  src="https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-image-700-205124837.jpg"
+                  alt="Avatar"
+                  className="w-20 h-20 rounded-full border-4 border-green-400 shadow-md object-cover"
+                />
+              </div>
+              <Link
+                to="/user/profile"
+                className="mt-4 text-base font-semibold text-gray-800 hover:text-green-600 transition truncate max-w-[150px]"
+              >
+                {user.full_name}
+              </Link>
+              <Link to="/user/profile/edit">
+                <button className="mt-1 text-xs text-gray-500 hover:text-green-600 flex items-center gap-1 transition">
+                  <EditOutlined className="text-[12px]" /> Sửa Hồ Sơ
+                </button>
+              </Link>
             </div>
-          </div>
 
-          {/* User Menu */}
+            {/* User Menu */}
+            <nav className="flex flex-col gap-2 text-gray-700">
+              <button
+                onClick={() => navigate('/user/order')}
+                className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-100 hover:text-green-600 transition text-sm font-medium"
+              >
+                <ShoppingCartOutlined /> Đơn Mua
+              </button>
+              <Link to="/user/coupon">
+                <button className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-100 hover:text-green-600 transition text-sm font-medium">
+                  <GiftOutlined /> Kho Voucher
+                </button>
+              </Link>
+            </nav>
+          </aside>
 
-          {/* Sidebar menu */}
-          <nav className="flex flex-col gap-4 text-gray-700">
-            {/* <button className="flex items-center gap-3 text-orange-500 font-semibold hover:underline">...</button>
-            <button className="flex items-center gap-3 text-blue-600 hover:underline">...</button> */}
-            <button onClick={() => navigate('/user/order')} className="flex items-center gap-3 text-blue-600 hover:underline">Đơn Mua</button>
-            <Link to={'/user/coupon'}>
-              <button className="flex items-center gap-3 text-gray-700 hover:underline">Kho Voucher</button>
-            </Link>
-          
-          </nav>
-        </aside>
-
-        {/* Main content */}
-        <main className="flex-1 flex flex-col bg-white">
-          <div className="flex-grow px-6 py-4">
-            <Outlet context={user} />
-          </div>
-        </main>
+          {/* Main content */}
+          <main className="flex-1 bg-white">
+            <div className="px-8 py-6 text-sm">
+              <Outlet context={user} />
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );

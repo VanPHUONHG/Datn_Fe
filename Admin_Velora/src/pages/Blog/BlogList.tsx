@@ -61,7 +61,7 @@ const BlogList = () => {
             {currentBlogs.length === 0 ? (
               <tr>
                 <td colSpan={5} className="text-center py-6 text-gray-500">
-                  Không có bài viết nào
+                  Đang tải bài viết
                 </td>
               </tr>
             ) : (

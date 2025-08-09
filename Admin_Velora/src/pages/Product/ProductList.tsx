@@ -133,7 +133,7 @@ const currentProducts = filteredProducts.slice((page - 1) * perPage, page * perP
             {currentProducts.length === 0 ? (
               <tr>
                 <td colSpan={8} className="text-center py-6 text-gray-500">
-                  Không có sản phẩm nào
+                  Đang tải sản phẩm
                 </td>
               </tr>
             ) : (
