@@ -72,18 +72,34 @@ const currentProducts = filteredProducts.slice((page - 1) * perPage, page * perP
   };
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
+      
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">
           Quản lý sản phẩm
         </h2>
       </div>
-      <div className="mb-6 flex justify-end">
-        <Link to={"/admin/product-delete"}
-          className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition"
-        >
-          Xem sản phẩm đã xóa
-        </Link>
-      </div>
+      
+   <div className="mb-6 flex justify-between items-center">
+  {/* Tổng sản phẩm */}
+<div className="bg-green-50 px-4 py-2 rounded-lg shadow-sm flex items-center">
+  <span className="text-lg font-semibold text-gray-800">
+    Tổng số sản phẩm:
+  </span>
+  <span className="ml-2 text-lg font-bold text-green-600">
+    {filteredProducts.length}
+  </span>
+</div>
+
+
+  {/* Nút xem sản phẩm đã xóa */}
+  <Link
+    to={"/admin/product-delete"}
+    className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition font-medium"
+  >
+    Xem sản phẩm đã xóa
+  </Link>
+</div>
+
       <div className="mb-4 flex gap-4 items-center">
   <Input
     placeholder="Tìm theo tên sản phẩm"
@@ -107,7 +123,7 @@ const currentProducts = filteredProducts.slice((page - 1) * perPage, page * perP
 </div>
 
       <div >
-        
+      
         <table className="min-w-full border border-gray-300 text-sm">
           <thead className="bg-gray-100 sticky top-0 z-10">
             <tr>

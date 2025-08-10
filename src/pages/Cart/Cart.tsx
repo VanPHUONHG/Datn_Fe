@@ -14,6 +14,28 @@ const Cart = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState<IUser | null>(null);
 
+  const [selectAll, setSelectAll] = useState(false);
+
+  //Hàm xử lý khi tick chọn tất cả:
+  const handleToggleSelectAll = (checked: boolean) => {
+  setSelectAll(checked);
+  if (checked) {
+    // Chọn tất cả item
+    const allKeys = cart?.items.map((item) => getItemKey(item)) || [];
+    setSelectedItemKeys(allKeys);
+  } else {
+    // Bỏ chọn tất cả
+    setSelectedItemKeys([]);
+  }
+};
+useEffect(() => {
+  if (cart?.items.length) {
+    setSelectAll(selectedItemKeys.length === cart.items.length);
+  }
+}, [selectedItemKeys, cart]);
+
+
+
   const formatVND = (value: number) =>
     new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -224,14 +246,20 @@ const displayedProducts = showAll ? viewedProducts : viewedProducts.slice(0, 5);
           <div className="overflow-x-auto">
           <table className="w-full text-sm border border-gray-200 rounded">
             <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 text-center">Chọn</th>
-                <th className="p-2 text-left">Sản phẩm</th>
-                <th className="p-2 text-center">Giá</th>
-                <th className="p-2 text-center">Số lượng</th>
-                <th className="p-2 text-center">Tổng tiền</th>
-                <th className="p-2 text-center">Action</th>
-              </tr>
+             <tr>
+    <th className="p-2 text-center">
+      <input
+        type="checkbox"
+        checked={selectAll}
+        onChange={(e) => handleToggleSelectAll(e.target.checked)}
+      />
+    </th>
+    <th className="p-2 text-left">Sản phẩm</th>
+    <th className="p-2 text-center">Giá</th>
+    <th className="p-2 text-center">Số lượng</th>
+    <th className="p-2 text-center">Tổng tiền</th>
+    <th className="p-2 text-center">Action</th>
+  </tr>
             </thead>
             <tbody>
               {cart.items.map((item) => {

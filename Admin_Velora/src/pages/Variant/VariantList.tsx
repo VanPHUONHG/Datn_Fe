@@ -98,10 +98,18 @@ const totalPages = Math.ceil(filteredVariants.length / perPage);
         <h2 className="text-2xl font-semibold text-gray-800">Quản lý biến thể</h2>
       </div>
 
-      <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex justify-between">
+         <div className="bg-green-50 px-4 py-2 rounded-lg shadow-sm flex items-center">
+    <span className="text-lg font-semibold text-gray-800">
+      Tổng biến thể:
+    </span>
+    <span className="ml-2 text-lg font-bold text-green-600">
+      {total.toLocaleString()}
+    </span>
+  </div>
         <Link
           to="/admin/variant-delete"
-          className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition"
+          className="px-3 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition"
         >
           Xem biến thể đã xóa
         </Link>

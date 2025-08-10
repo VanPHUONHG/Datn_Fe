@@ -15,20 +15,24 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(12); // Số sản phẩm hiển thị ban đầu
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getAllProducts();
-        setData(result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const result = await getAllProducts();
+      // Sắp xếp mới nhất lên đầu
+     const sorted = [...result].sort(
+  (a, b) => new Date(b.createdAt as string).getTime() - new Date(a.createdAt as string).getTime()
+);
+      setData(sorted);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchData();
-  }, []);
+  fetchData();
+}, []);
 
   // Nút cuộn lên đầu trang
   const [showScrollTop, setShowScrollTop] = useState(false);

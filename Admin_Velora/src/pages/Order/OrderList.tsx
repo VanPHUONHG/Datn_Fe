@@ -28,7 +28,7 @@ const OrderList = () => {
   const statusColors: Record<string, { bg: string; text: string }> = {
   pending: { bg: "bg-yellow-100", text: "text-yellow-800" },
   confirmed: { bg: "bg-blue-100", text: "text-blue-800" },
-  shipping: { bg: "bg-purple-100", text: "text-purple-800" },
+  shipped: { bg: "bg-purple-100", text: "text-purple-800" },
   completed: { bg: "bg-green-100", text: "text-green-800" },
   cancelled: { bg: "bg-red-100", text: "text-red-800" },
 };
@@ -142,19 +142,47 @@ removeVietnameseTones(
 
       {/* Filters */}
       <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
-        <Tabs
-          activeKey={statusFilter || "all"}
-          onChange={(key) => {
-            setStatusFilter(key === "all" ? null : key);
-            setPage(1);
-          }}
-          className="w-full md:w-auto"
-        >
-          <TabPane tab="Tất cả" key="all" />
-          {Object.entries(ORDER_STATUS_VI).map(([key, label]) => (
-            <TabPane key={key} tab={label} />
-          ))}
-        </Tabs>
+<Tabs
+  activeKey={statusFilter || "all"}
+  onChange={(key) => {
+    setStatusFilter(key === "all" ? null : key);
+    setPage(1);
+  }}
+  className="w-full md:w-auto custom-tabs"
+>
+  {/* Tab "Tất cả" */}
+  <TabPane
+    tab={
+      <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-800 font-medium">
+        Tất cả ({orders.length})
+      </span>
+    }
+    key="all"
+  />
+
+  {/* Các tab trạng thái */}
+  {Object.entries(ORDER_STATUS_VI).map(([key, label]) => {
+    const count = orders.filter(o => o.status === key).length;
+    const colors: Record<string, string> = {
+      pending: "bg-yellow-200 text-yellow-900",
+      confirmed: "bg-blue-200 text-blue-900",
+      shipped: "bg-purple-100 text-purple-800",
+      completed: "bg-green-200 text-green-900",
+      cancelled: "bg-red-200 text-red-900",
+    };
+    return (
+      <TabPane
+        key={key}
+        tab={
+          <span className={`px-3 py-1 rounded-full font-medium ${colors[key] || "bg-gray-200 text-gray-800"}`}>
+            {label} ({count})
+          </span>
+        }
+      />
+    );
+  })}
+</Tabs>
+
 
         <div className="flex flex-wrap gap-4 items-center w-full md:w-auto">
           <Input
