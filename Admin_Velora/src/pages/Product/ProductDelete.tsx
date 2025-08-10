@@ -130,7 +130,7 @@ const ProductDelete = () => {
                       : "Không rõ"}
 </td>
 <td className="border px-4 py-7 text-sm flex gap-3 justify-center">
-  <Popconfirm
+  {/* <Popconfirm
     title="Bạn có chắc muốn xóa vĩnh viễn sản phẩm này?"
     onConfirm={() => handleDeletePermanent(item._id)}
     okText="Xóa"
@@ -145,7 +145,7 @@ const ProductDelete = () => {
     >
       Xóa
     </Button>
-  </Popconfirm>
+  </Popconfirm> */}
 
   <Popconfirm
     title="Bạn có chắc muốn khôi phục sản phẩm này?"

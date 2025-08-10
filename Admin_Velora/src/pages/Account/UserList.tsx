@@ -95,13 +95,13 @@ const UserList = () => {
   return (
     <div className="p-4 bg-white rounded shadow">
       <h2 className="text-xl font-bold mb-4 text-green-600">Danh sách khách hàng</h2>
-<div className="mb-4 flex justify-end">
+{/* <div className="mb-4 flex justify-end">
   <Link to="/admin/user-deleted">
     <button className="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded border border-red-300 transition">
       Danh sách người dùng đã xóa mềm
     </button>
   </Link>
-</div>
+</div> */}
 
       {/* Bộ lọc */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
@@ -164,12 +164,12 @@ const UserList = () => {
                       Sửa
                     </button>
                   </Link>
-                  <button
+                  {/* <button
   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
   onClick={() => handleSoftDelete(user._id)}
 >
   Xoá
-</button>
+</button> */}
                 </div>
               </td>
             </tr>

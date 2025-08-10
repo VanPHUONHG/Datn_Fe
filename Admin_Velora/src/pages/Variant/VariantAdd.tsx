@@ -39,17 +39,21 @@ const VariantAdd = () => {
     getValues,
   } = useForm<VariantFormInput>();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await getAllProducts();
-        setProducts(res.products || []);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchProducts();
-  }, []);
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await getAllProducts();
+      const sortedProducts = (res.products || []).sort((a: Product, b: Product) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // mới nhất lên trên
+      });
+      setProducts(sortedProducts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  fetchProducts();
+}, []);
+
 
   const uploadImage = async (file: File): Promise<string> => {
     const formData = new FormData();
