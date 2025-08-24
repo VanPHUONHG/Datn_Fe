@@ -145,7 +145,7 @@ const OrderDetail = () => {
           )}
 
           <div className="flex justify-between py-1 border-b border-gray-200 font-semibold">
-            <div>Total:</div>
+            <div>Tổng tiền:</div>
             <div className="text-right">{order.finalAmount.toLocaleString()} VND</div>
           </div>
         </section>

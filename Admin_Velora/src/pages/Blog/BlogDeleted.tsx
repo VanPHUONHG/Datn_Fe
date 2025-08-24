@@ -69,7 +69,7 @@ const BlogDeleted = () => {
           <thead className="bg-gray-100 sticky top-0 z-10">
             <tr>
               {["STT", "Tiêu đề", "Danh mục", "Ngày xóa", "Thao tác"].map((h) => (
-                <th key={h} className="border px-4 py-2 text-left text-gray-700 font-medium">
+                <th key={h} className=" px-4 py-2 text-left text-gray-700 font-medium">
                   {h}
                 </th>
               ))}
@@ -85,14 +85,24 @@ const BlogDeleted = () => {
             ) : (
               blogs.map((blog, index) => (
                 <tr key={blog._id} className="even:bg-gray-50 hover:bg-gray-100">
-                  <td className="border px-4 py-2">{(page - 1) * perPage + index + 1}</td>
-                  <td className="border px-4 py-2 font-semibold">{blog.title}</td>
-                  <td className="border px-4 py-2">{blog.category?.name || "Không có"}</td>
-                  <td className="border px-4 py-2 text-gray-600 text-sm">
-                    {blog.deletedAt ? new Date(blog.deletedAt).toLocaleDateString() : "Không rõ"}
+                  <td className=" px-4 py-2">{(page - 1) * perPage + index + 1}</td>
+                  <td className=" px-4 py-2 font-semibold">{blog.title}</td>
+                  <td className=" px-4 py-2">{blog.category?.name || "Không có"}</td>
+                  <td className=" px-4 py-2 text-gray-600 text-sm">
+                    {blog.updatedAt ? new Date(blog.updatedAt).toLocaleDateString() : "Không rõ"}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     <div className="flex gap-2 justify-center">
+                        <Popconfirm
+                        title="Khôi phục blog này?"
+                        onConfirm={() => handleRestore(blog.slug)}
+                        okText="Khôi phục"
+                        cancelText="Hủy"
+                      >
+                        <Button type="primary" icon={<RollbackOutlined />} size="small">
+                          Khôi phục
+                        </Button>
+                      </Popconfirm>
                       <Popconfirm
                         title="Bạn có chắc muốn xóa vĩnh viễn blog này?"
                         onConfirm={() => handleForceDelete(blog.slug)}
@@ -103,16 +113,7 @@ const BlogDeleted = () => {
                           Xóa
                         </Button>
                       </Popconfirm>
-                      <Popconfirm
-                        title="Khôi phục blog này?"
-                        onConfirm={() => handleRestore(blog.slug)}
-                        okText="Khôi phục"
-                        cancelText="Hủy"
-                      >
-                        <Button type="primary" icon={<RollbackOutlined />} size="small">
-                          Khôi phục
-                        </Button>
-                      </Popconfirm>
+                    
                     </div>
                   </td>
                 </tr>

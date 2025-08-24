@@ -83,10 +83,17 @@ function Checkout() {
       setCouponError(result.message || "Mã không hợp lệ.");
     }
   } catch (error: any) {
-    const errMessage = error?.message || "Không thể áp dụng mã giảm giá.";
-    setCoupon(null);
-    setCouponError(errMessage);
+  let errMessage = "Không thể áp dụng mã giảm giá.";
+
+  if (error.response?.data?.message) {
+    errMessage = error.response.data.message; // Lấy message từ backend
+  } else if (error.message) {
+    errMessage = error.message;
   }
+
+  setCoupon(null);
+  setCouponError(errMessage);
+}
 };
 
 

@@ -138,7 +138,7 @@ const currentProducts = filteredProducts.slice((page - 1) * perPage, page * perP
               ].map((header) => (
                 <th
                   key={header}
-                  className="border px-4 py-3 text-left text-gray-700 font-medium select-none"
+                  className=" px-4 py-3 text-left text-gray-700 font-medium select-none"
                 >
                   {header}
                 </th>
@@ -158,16 +158,16 @@ const currentProducts = filteredProducts.slice((page - 1) * perPage, page * perP
                   key={item._id}
                   className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
-                  <td className="border px-4 py-2 align-middle">
+                  <td className=" px-4 py-2 align-middle">
                     {(page - 1) * perPage + index + 1}
                   </td>
                   <td
-                    className="border px-4 py-2 align-middle font-semibold text-gray-800 max-w-xs truncate"
+                    className=" px-4 py-2 align-middle font-semibold text-gray-800 max-w-xs truncate"
                     title={item.name}
                   >
                     {item.name}
                   </td>
-                  <td className="border px-4 py-2 align-middle">
+                  <td className=" px-4 py-2 align-middle">
                     {item.images && item.images.length > 0 ? (
                       <img
                         src={item.images[0]}
@@ -178,17 +178,17 @@ const currentProducts = filteredProducts.slice((page - 1) * perPage, page * perP
                       <span className="text-gray-400 italic">Chưa có ảnh</span>
                     )}
                   </td>
-                  <td className="border px-4 py-2 align-middle">
+                  <td className=" px-4 py-2 align-middle">
                     {item.price.toLocaleString()}
                   </td>
       
-                  <td className="border px-4 py-2 align-middle">
+                  <td className=" px-4 py-2 align-middle">
                     {item.category?.name || "Không có"}
                   </td>
-                  <td className="border px-4 py-2 align-middle text-gray-600 text-sm">
+                  <td className=" px-4 py-2 align-middle text-gray-600 text-sm">
                     {new Date(item.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="border px-4 py-2 align-middle">
+                  <td className=" px-4 py-2 align-middle">
                     <div className="flex gap-3">
                       <Link
                         to={`/admin/product-edit/${item._id}`}

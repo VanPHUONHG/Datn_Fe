@@ -84,7 +84,7 @@ const CouponDelete = () => {
               ].map((header) => (
                 <th
                   key={header}
-                  className="border px-4 py-3 text-left text-gray-700 font-medium select-none"
+                  className=" px-4 py-3 text-left text-gray-700 font-medium select-none"
                 >
                   {header}
                 </th>
@@ -110,22 +110,22 @@ const CouponDelete = () => {
                   key={coupon._id}
                   className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
-                  <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border px-4 py-2">{coupon.code}</td>
-                  <td className="border px-4 py-2">{coupon.discount_type}</td>
-                  <td className="border px-4 py-2">{coupon.discount_value}</td>
-                  <td className="border px-4 py-2">{coupon.max_discount}</td>
-                  <td className="border px-4 py-2">{coupon.min_purchase}</td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">{index + 1}</td>
+                  <td className=" px-4 py-2">{coupon.code}</td>
+                  <td className=" px-4 py-2">{coupon.discount_type}</td>
+                  <td className=" px-4 py-2">{coupon.discount_value}</td>
+                  <td className=" px-4 py-2">{coupon.max_discount}</td>
+                  <td className=" px-4 py-2">{coupon.min_purchase}</td>
+                  <td className=" px-4 py-2">
                     {new Date(coupon.start_date).toLocaleDateString()}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     {new Date(coupon.end_date).toLocaleDateString()}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     <span className="text-red-600 font-medium">✘</span>
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                    <div className="flex gap-2 justify-center">
   <Popconfirm
     title="Bạn có muốn khôi phục mã này không?"

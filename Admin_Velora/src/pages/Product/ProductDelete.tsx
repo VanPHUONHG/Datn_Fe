@@ -77,7 +77,7 @@ const ProductDelete = () => {
               ].map((header) => (
                 <th
                   key={header}
-                  className="border px-4 py-3 text-left text-gray-700 font-medium select-none"
+                  className=" px-4 py-3 text-left text-gray-700 font-medium select-none"
                 >
                   {header}
                 </th>
@@ -97,13 +97,13 @@ const ProductDelete = () => {
                   key={item._id}
                   className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     {(page - 1) * perPage + index + 1}
                   </td>
-                  <td className="border px-4 py-2 font-semibold text-gray-800 max-w-xs truncate">
+                  <td className=" px-4 py-2 font-semibold text-gray-800 max-w-xs truncate">
                     {item.name}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     {item.images?.length > 0 ? (
                       <img
                         src={item.images[0]}
@@ -114,13 +114,13 @@ const ProductDelete = () => {
                       <span className="text-gray-400 italic">Chưa có ảnh</span>
                     )}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     {item.price.toLocaleString()}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
 {(item as any).category_id?.name || "Không có"}
                   </td>
-                  <td className="border px-4 py-2 text-sm text-gray-600">
+                  <td className=" px-4 py-2 text-sm text-gray-600">
    {item.isDeleted && item.updatedAt
                       ? new Date(item.updatedAt).toLocaleDateString("vi-VN", {
                           day: "2-digit",
@@ -129,7 +129,7 @@ const ProductDelete = () => {
                         })
                       : "Không rõ"}
 </td>
-<td className="border px-4 py-7 text-sm flex gap-3 justify-center">
+<td className=" px-4 py-7 text-sm flex gap-3 justify-center">
   {/* <Popconfirm
     title="Bạn có chắc muốn xóa vĩnh viễn sản phẩm này?"
     onConfirm={() => handleDeletePermanent(item._id)}

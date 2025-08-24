@@ -79,7 +79,7 @@ const UserEdit = () => {
           name="username"
           rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập" }]}
         >
-          <Input size="large" className="w-full" />
+          <Input size="large" className="w-full" disabled/>
         </Form.Item>
 
         <Form.Item
@@ -87,7 +87,7 @@ const UserEdit = () => {
           name="email"
           rules={[{ type: "email", message: "Email không hợp lệ" }]}
         >
-          <Input size="large" className="w-full" />
+          <Input size="large" className="w-full" disabled/>
         </Form.Item>
 
         <Form.Item
@@ -95,11 +95,11 @@ const UserEdit = () => {
           name="phone"
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
         >
-          <Input size="large" className="w-full" />
+          <Input size="large" className="w-full" disabled/>
         </Form.Item>
 
         <Form.Item label="Địa chỉ" name="address">
-          <Input size="large" className="w-full" />
+          <Input size="large" className="w-full" disabled/>
         </Form.Item>
 
         <Form.Item

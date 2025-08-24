@@ -64,7 +64,7 @@ const CategoryList = () => {
               {["STT", "Tên danh mục", "Mô tả", "Thao tác"].map((header) => (
                 <th
                   key={header}
-                  className="border px-4 py-3 text-left text-gray-700 font-medium select-none"
+                  className=" px-4 py-3 text-left text-gray-700 font-medium select-none"
                 >
                   {header}
                 </th>
@@ -84,17 +84,17 @@ const CategoryList = () => {
                   key={item._id}
                   className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     {(page - 1) * perPage + index + 1}
                   </td>
-                  <td className="border px-4 py-2 font-semibold text-gray-800">
+                  <td className=" px-4 py-2 font-semibold text-gray-800">
                     {item.name}
                   </td>
-                  <td className="border px-4 py-2">{item.description}</td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">{item.description}</td>
+                  <td className=" px-4 py-2">
                     <div className="flex gap-3">
                       <Button
-                        className="bg-red-600 hover:bg-blue-700 text-white font-semibold"
+                        className="!bg-green-600 hover:!bg-green-700 !text-white font-semibold"
                         onClick={() => nav(`/admin/category-in-product/${item._id}`)}
                       >
                         Chi tiết
@@ -114,7 +114,7 @@ const CategoryList = () => {
                       >
                         <Button
                           danger
-                          className="bg-red-600 hover:bg-red-700 text-white font-semibold"
+                          className="!bg-red-600 hover:!bg-red-700 !text-white font-semibold"
                         >
                           Xóa
                         </Button>
@@ -164,7 +164,7 @@ const CategoryList = () => {
       onClick={() => setPage(i + 1)}
       className={`px-3 py-1 rounded-lg border transition font-semibold
         ${page === i + 1
-          ? "bg-blue-600 text-white border-blue-600"
+          ? "bg-blue-500 text-white border-blue-500"
           : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
         }`}
     >

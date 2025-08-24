@@ -80,7 +80,7 @@ const fetchDeletedCategories = async (pageNumber = page) => {
               ].map((header) => (
                 <th
                   key={header}
-                  className="border px-4 py-3 text-left text-gray-700 font-medium select-none"
+                  className=" px-4 py-3 text-left text-gray-700 font-medium select-none"
                 >
                   {header}
                 </th>
@@ -100,18 +100,18 @@ const fetchDeletedCategories = async (pageNumber = page) => {
                   key={item._id}
                   className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     {(page - 1) * perPage + index + 1}
                   </td>
-                  <td className="border px-4 py-2 font-semibold text-gray-800 max-w-xs truncate">
+                  <td className=" px-4 py-2 font-semibold text-gray-800 max-w-xs truncate">
                     {item.name}
                   </td>
-                  <td className="border px-4 py-2 max-w-md truncate">{item.description || "-"}</td>
-                  <td className="border px-4 py-2 text-sm text-gray-600">
+                  <td className=" px-4 py-2 max-w-md truncate">{item.description || "-"}</td>
+                  <td className=" px-4 py-2 text-sm text-gray-600">
                     {new Date(item.updatedAt || item.createdAt).toLocaleDateString()}
                   </td>
 
-                  <td className="border px-4 py-7 text-sm flex gap-3 justify-center">
+                  <td className=" px-4 py-7 text-sm flex gap-3 justify-center">
                     <Popconfirm
                       title="Bạn có chắc muốn xóa vĩnh viễn danh mục này?"
                       onConfirm={() => handleDeletePermanent(item._id)}

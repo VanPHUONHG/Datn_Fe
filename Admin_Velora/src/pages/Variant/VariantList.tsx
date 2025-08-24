@@ -184,7 +184,7 @@ const totalPages = Math.ceil(filteredVariants.length / perPage);
             {["STT", "Tên sản phẩm", "Sku", "Size", "Màu sắc", "Ảnh", "Giá gốc", "Giá KM", "Tồn kho", "Ngày cập nhật", "Thao tác"].map(header => (
               <th
                 key={header}
-                className="border px-4 py-3 text-left text-gray-700 font-medium select-none"
+                className=" px-4 py-3 text-left text-gray-700 font-medium select-none"
               >
                 {header}
               </th>
@@ -200,25 +200,25 @@ const totalPages = Math.ceil(filteredVariants.length / perPage);
           ) : (
             currentVariants.map((item, index) => (
               <tr key={item._id} className="even:bg-gray-50 hover:bg-gray-100 transition-colors">
-                <td className="border px-4 py-2">{(page - 1) * perPage + index + 1}</td>
-<td className="border px-4 py-2">{(item.product_id as { name?: string })?.name || "Không có"}</td>
-                <td className="border px-4 py-2">{item.sku}</td>
-                <td className="border px-4 py-2">{item.size}</td>
-                <td className="border px-4 py-2">{item.color}</td>
-                <td className="border px-4 py-2">
+                <td className=" px-4 py-2">{(page - 1) * perPage + index + 1}</td>
+<td className=" px-4 py-2">{(item.product_id as { name?: string })?.name || "Không có"}</td>
+                <td className=" px-4 py-2">{item.sku}</td>
+                <td className=" px-4 py-2">{item.size}</td>
+                <td className=" px-4 py-2">{item.color}</td>
+                <td className=" px-4 py-2">
                   <img
                     src={item.image}
                     alt=""
                     className="w-12 h-12 object-cover rounded-md shadow-sm"
                   />
                 </td>
-                <td className="border px-4 py-2">{item.price.toLocaleString()}₫</td>
-                <td className="border px-4 py-2">{item.discount_price?.toLocaleString() || "—"}₫</td>
-                <td className="border px-4 py-2">{item.stock_quantity}</td>
-               <td className="border px-4 py-2 text-sm text-gray-600">
+                <td className=" px-4 py-2">{item.price.toLocaleString()}₫</td>
+                <td className=" px-4 py-2">{item.discount_price?.toLocaleString() || "—"}₫</td>
+                <td className=" px-4 py-2">{item.stock_quantity}</td>
+               <td className=" px-4 py-2 text-sm text-gray-600">
   {new Date(item.updated_at as string).toLocaleDateString()}
 </td>
-                <td className="border px-4 py-2">
+                <td className=" px-4 py-2">
                   <div className="flex gap-2">
                     <Link
                       to={`/admin/variant-edit/${item._id}`}

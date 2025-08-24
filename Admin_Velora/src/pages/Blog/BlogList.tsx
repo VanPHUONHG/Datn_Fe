@@ -50,11 +50,11 @@ const BlogList = () => {
         <table className="min-w-full border border-gray-300 text-sm">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border px-4 py-3 text-left">STT</th>
-              <th className="border px-4 py-3 text-left">Tiêu đề</th>
-              <th className="border px-4 py-3 text-left">Danh mục</th>
-              <th className="border px-4 py-3 text-left">Ngày đăng</th>
-              <th className="border px-4 py-3 text-left">Thao tác</th>
+              <th className=" px-4 py-3 text-left">STT</th>
+              <th className=" px-4 py-3 text-left">Tiêu đề</th>
+              <th className=" px-4 py-3 text-left">Danh mục</th>
+              <th className=" px-4 py-3 text-left">Ngày đăng</th>
+              <th className=" px-4 py-3 text-left">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -67,13 +67,13 @@ const BlogList = () => {
             ) : (
               currentBlogs.map((blog, index) => (
                 <tr key={blog._id} className="even:bg-gray-50 hover:bg-gray-100 transition">
-                  <td className="border px-4 py-2">{(page - 1) * perPage + index + 1}</td>
-                  <td className="border px-4 py-2">{blog.title}</td>
-                  <td className="border px-4 py-2">{blog.category?.name || "Không có"}</td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">{(page - 1) * perPage + index + 1}</td>
+                  <td className=" px-4 py-2">{blog.title}</td>
+                  <td className=" px-4 py-2">{blog.category?.name || "Không có"}</td>
+                  <td className=" px-4 py-2">
                     {new Date(blog.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">
                     <div className="flex gap-2">
                       <Link
                         to={`/admin/blog-edit/${blog.slug}`}

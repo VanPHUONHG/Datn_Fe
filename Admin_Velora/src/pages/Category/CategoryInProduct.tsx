@@ -25,6 +25,7 @@ const CategoryInProduct = () => {
     fetchProducts();
   }, [id]);
 
+
   if (loading) return <p>Đang tải...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
@@ -34,7 +35,7 @@ const CategoryInProduct = () => {
         <h1 className="text-2xl font-bold">Sản phẩm thuộc danh mục</h1>
         <button
           onClick={() => navigate("/admin/category-list")}
-          className="px-4 py-2 bg-blue-200 text-white rounded hover:bg-gray-800 transition"
+          className="px-4 py-2 bg-blue-200 text-white rounded hover:bg-gray-500 transition"
         >
           Quay về danh mục
         </button>
@@ -48,13 +49,13 @@ const CategoryInProduct = () => {
               "Tên sản phẩm",
               "Ảnh sản phẩm",
               "Giá (VNĐ)",
-              "Số lượng",
+              "Giá khuyến mại",
               "Danh mục",
               "Ngày tạo",
             ].map((header) => (
               <th
                 key={header}
-                className="border px-4 py-3 text-left text-gray-700 font-medium select-none"
+                className=" px-4 py-3 text-left text-gray-700 font-medium select-none"
               >
                 {header}
               </th>
@@ -74,16 +75,16 @@ const CategoryInProduct = () => {
                 key={item._id}
                 className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
               >
-                <td className="border px-4 py-2 align-middle">
+                <td className=" px-4 py-2 align-middle">
                   {index + 1}
                 </td>
                 <td
-                  className="border px-4 py-2 align-middle font-semibold text-gray-800 max-w-xs truncate"
+                  className=" px-4 py-2 align-middle font-semibold text-gray-800 max-w-xs truncate"
                   title={item.name}
                 >
                   {item.name}
                 </td>
-                <td className="border px-4 py-2 align-middle">
+                <td className=" px-4 py-2 align-middle">
                   {item.images && item.images.length > 0 ? (
                     <img
                       src={item.images[0]}
@@ -94,16 +95,16 @@ const CategoryInProduct = () => {
                     <span className="text-gray-400 italic">Chưa có ảnh</span>
                   )}
                 </td>
-                <td className="border px-4 py-2 align-middle">
+                <td className=" px-4 py-2 align-middle">
                   {item.price.toLocaleString()}
                 </td>
-                <td className="border px-4 py-2 align-middle">
-                  {item.stock_quantity}
+                   <td className=" px-4 py-2 align-middle">
+                  {item.discount_price.toLocaleString()}
                 </td>
-                <td className="border px-4 py-2 align-middle">
+                <td className=" px-4 py-2 align-middle">
                   {(item.category_id as { name?: string })?.name || "Không có"}
                 </td>
-                <td className="border px-4 py-2 align-middle text-gray-600 text-sm">
+                <td className=" px-4 py-2 align-middle text-gray-600 text-sm">
                   {new Date(item.createdAt).toLocaleDateString()}
                 </td>
               </tr>

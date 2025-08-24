@@ -114,13 +114,13 @@ const ReviewList = () => {
             onClick={() =>
               setReplyingId(replyingId === parent._id ? null : parent._id)
             }
-            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-500"
           >
             <FaReply />
           </button>
           <button
             onClick={() => handleDelete(parent._id)}
-            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-500"
           >
             <FaTrash />
           </button>

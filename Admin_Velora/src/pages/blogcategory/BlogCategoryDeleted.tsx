@@ -58,7 +58,8 @@ const BlogCategoryDeleted = () => {
     <div className="p-6 bg-white rounded-lg shadow-md">
       <div className="mb-6 flex justify-between">
         <h2 className="text-lg font-semibold">Danh mục đã xóa</h2>
-        <Link to="/admin/blog-category-list" className="text-blue-600 hover:underline">
+        <Link to="/admin/blog-category-list"          className="px-4 py-2 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 border border-blue-300"
+>
           ← Quay lại danh sách danh mục
         </Link>
       </div>
@@ -66,10 +67,10 @@ const BlogCategoryDeleted = () => {
       <table className="min-w-full border border-gray-300 text-sm">
         <thead className="bg-gray-100">
           <tr>
-            <th className="border px-4 py-2 text-left">STT</th>
-            <th className="border px-4 py-2 text-left">Tên danh mục</th>
-            <th className="border px-4 py-2 text-left">Mô tả</th>
-            <th className="border px-4 py-2 text-left">Thao tác</th>
+            <th className=" px-4 py-2 text-left">STT</th>
+            <th className=" px-4 py-2 text-left">Tên danh mục</th>
+            <th className=" px-4 py-2 text-left">Mô tả</th>
+            <th className=" px-4 py-2 text-left">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -82,10 +83,10 @@ const BlogCategoryDeleted = () => {
           ) : (
             categories.map((category, index) => (
               <tr key={category._id} className="even:bg-gray-50 hover:bg-gray-100 transition">
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4 py-2">{category.name}</td>
-                <td className="border px-4 py-2">{category.description}</td>
-                <td className="border px-4 py-2 flex gap-2">
+                <td className=" px-4 py-2">{index + 1}</td>
+                <td className=" px-4 py-2">{category.name}</td>
+                <td className=" px-4 py-2">{category.description}</td>
+                <td className=" px-4 py-2 flex gap-2">
                   <button
                     onClick={() => handleRestore(category.slug)}
                     className="px-3 py-1 rounded-md bg-green-500 text-white hover:bg-green-600 text-sm"

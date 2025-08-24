@@ -8,7 +8,11 @@ const NewArrivals = () => {
   useEffect(() => {
     const fetchTopProducts = async () => {
       try {
-        const data = await getTopSellingProducts(4);
+        const now = new Date();
+        const to = now.toISOString();
+        const from = new Date(now.setMonth(now.getMonth() - 1)).toISOString(); // lùi 1 tháng
+
+        const data = await getTopSellingProducts(4, from, to);
         setTopProducts(data);
       } catch (err) {
         console.error('Lỗi khi tải sản phẩm bán chạy:', err);
@@ -64,10 +68,10 @@ const NewArrivals = () => {
     {/* Top Selling Section */}
       <div className="mt-10">
         <h1 className="text-gray-800 text-2xl font-extrabold">
-          Sản phẩm <span className="text-green-500 font-normal">bán chạy nhất</span>
+          Sản phẩm <span className="text-green-500 font-normal">bán chạy trong tháng</span>
         </h1>
         <p className="text-gray-500 text-sm mt-1">
-          Lựa chọn hàng đầu của người dùng
+          Lựa chọn hàng đầu trong 30 ngày qua
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-6 text-left">

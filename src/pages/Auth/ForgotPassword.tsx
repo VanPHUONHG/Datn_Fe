@@ -23,6 +23,19 @@ const ForgotPassword: React.FC = () => {
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     const { otp, newPassword, confirmPassword } = otpData;
+
+    if (!otp) {
+    return message.error("Vui lòng nhập mã OTP");
+  }
+
+  if (!newPassword) {
+    return message.error("Vui lòng nhập mật khẩu mới");
+  }
+
+  if (newPassword.length < 6) {
+    return message.error("Mật khẩu phải có ít nhất 6 ký tự");
+  }
+  
     if (newPassword !== confirmPassword) {
       return message.error('Mật khẩu xác nhận không khớp');
     }

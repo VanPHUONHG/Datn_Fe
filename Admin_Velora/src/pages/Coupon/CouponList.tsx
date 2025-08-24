@@ -78,7 +78,7 @@ const getDiscountTypeText = (type: "percent" | "fixed") => {
               "Kích hoạt",
               "Thao tác",
             ].map((header) => (
-              <th key={header} className="border px-4 py-2 text-left font-medium">
+              <th key={header} className=" px-4 py-2 text-left font-medium">
                 {header}
               </th>
             ))}
@@ -100,26 +100,26 @@ const getDiscountTypeText = (type: "percent" | "fixed") => {
           ) : (
             coupons.map((coupon, index) => (
               <tr key={coupon._id} className="even:bg-gray-50 hover:bg-gray-100">
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4 py-2">{coupon.code}</td>
-                <td className="border px-4 py-2">{getDiscountTypeText(coupon.discount_type)}</td>
-                <td className="border px-4 py-2">{coupon.discount_value}</td>
-                <td className="border px-4 py-2">{coupon.max_discount}</td>
-                <td className="border px-4 py-2">{coupon.min_purchase}</td>
-                <td className="border px-4 py-2">
+                <td className=" px-4 py-2">{index + 1}</td>
+                <td className=" px-4 py-2">{coupon.code}</td>
+                <td className=" px-4 py-2">{getDiscountTypeText(coupon.discount_type)}</td>
+                <td className=" px-4 py-2">{coupon.discount_value}</td>
+                <td className=" px-4 py-2">{coupon.max_discount}</td>
+                <td className=" px-4 py-2">{coupon.min_purchase}</td>
+                <td className=" px-4 py-2">
                   {new Date(coupon.start_date).toLocaleDateString()}
                 </td>
-                <td className="border px-4 py-2">
+                <td className=" px-4 py-2">
                   {new Date(coupon.end_date).toLocaleDateString()}
                 </td>
-                <td className="border px-4 py-2">
+                <td className=" px-4 py-2">
                   {coupon.is_active ? (
                     <span className="text-green-600 font-medium">✔</span>
                   ) : (
                     <span className="text-red-600 font-medium">✘</span>
                   )}
                 </td>
-                <td className="border px-4 py-2">
+                <td className=" px-4 py-2">
                   <div className="flex gap-2">
                     <Link
                       to={`/admin/coupon-edit/${coupon._id}`}
@@ -133,7 +133,7 @@ const getDiscountTypeText = (type: "percent" | "fixed") => {
                       okText="Có"
                       cancelText="Không"
                     >
-                      <button className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                      <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-500">
                         Xoá
                       </button>
                     </Popconfirm>

@@ -257,7 +257,7 @@ removeVietnameseTones(
         <thead className="bg-gray-100">
           <tr>
             {["STT", "Tên tài khoản", "SĐT", "Tổng tiền", "Ngày đặt", "Trạng thái", "Thao tác"].map((h) => (
-              <th key={h} className="border px-4 py-2 text-left text-gray-700 font-medium">
+              <th key={h} className=" px-4 py-2 text-left text-gray-700 font-medium">
                 {h}
               </th>
             ))}
@@ -273,14 +273,14 @@ removeVietnameseTones(
           ) : (
             currentOrders.map((order, idx) => (
               <tr key={order._id} className="even:bg-gray-50 hover:bg-gray-100 transition-colors">
-                <td className="border px-4 py-2">{(page - 1) * perPage + idx + 1}</td>
-<td className="border px-4 py-2">
+                <td className=" px-4 py-2">{(page - 1) * perPage + idx + 1}</td>
+<td className=" px-4 py-2">
   {typeof order.user === "string" || !order.user ? "Người dùng đã bị xóa" : order.user.full_name}
 </td>
-                <td className="border px-4 py-2">{order.shippingAddress?.phone || "N/A"}</td>
-                <td className="border px-4 py-2">{order.finalAmount.toLocaleString()} ₫</td>
-                <td className="border px-4 py-2">{order.createdAt ? dayjs(order.createdAt).format("DD/MM/YYYY") : "N/A"}</td>
-<td className="border px-4 py-2">
+                <td className=" px-4 py-2">{order.shippingAddress?.phone || "N/A"}</td>
+                <td className=" px-4 py-2">{order.finalAmount.toLocaleString()} ₫</td>
+                <td className=" px-4 py-2">{order.createdAt ? dayjs(order.createdAt).format("DD/MM/YYYY") : "N/A"}</td>
+<td className=" px-4 py-2">
   {(() => {
     const statusKey = String(order.status); // Ép thành string an toàn
     const colors = statusColors[statusKey] || { bg: "bg-gray-100", text: "text-gray-800" };
@@ -294,7 +294,7 @@ removeVietnameseTones(
     );
   })()}
 </td>
-                <td className="border px-4 py-2">
+                <td className=" px-4 py-2">
                   <div className="flex gap-3">
                     <Link to={`/admin/order-detail/${order._id}`} className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
                       Chi tiết

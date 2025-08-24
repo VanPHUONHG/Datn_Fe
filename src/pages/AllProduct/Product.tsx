@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import type { Product } from 'interface/product';
-import { getAll } from 'services/allProduct/allProduct.service';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import type { Product } from "interface/product";
+import { getAll } from "services/allProduct/allProduct.service";
+import {
+  SlidersHorizontal,
+  Palette,
+  Ruler,
+  Tag,
+  BadgeDollarSign,
+} from "lucide-react";
 
 const COLORS = [
-  { value: 'Đen', label: 'Đen' },
-  { value: 'Trắng', label: 'Trắng' },
-  { value: 'Xanh', label: 'Xanh' },
-  { value: 'Đỏ', label: 'Đỏ' },
-  { value: 'Nâu', label: 'Nâu' },
-  { value: 'Hồng', label: 'Hồng' },
-
+  { value: "Đen", label: "Đen" },
+  { value: "Trắng", label: "Trắng" },
+  { value: "Xanh", label: "Xanh" },
+  { value: "Đỏ", label: "Đỏ" },
+  { value: "Nâu", label: "Nâu" },
+  { value: "Hồng", label: "Hồng" },
 ];
 
 function AllProducts() {
@@ -18,14 +24,11 @@ function AllProducts() {
   const [loading, setLoading] = useState(true);
 
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<[number, number] | null>(null);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<
+    [number, number] | null
+  >(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-
-  const [showPriceFilter, setShowPriceFilter] = useState(false);
-  const [showSizeFilter, setShowSizeFilter] = useState(false);
-  const [showColorFilter, setShowColorFilter] = useState(false);
-  const [showBrandFilter, setShowBrandFilter] = useState(false);
 
   const handleToggle = (
     selected: string | null,
@@ -45,12 +48,12 @@ function AllProducts() {
 
   const buildQueryString = () => {
     const params = new URLSearchParams();
-    if (selectedSize) params.append('size', selectedSize);
-    if (selectedColor) params.append('color', selectedColor);
-    if (selectedBrand) params.append('brand', selectedBrand);
+    if (selectedSize) params.append("size", selectedSize);
+    if (selectedColor) params.append("color", selectedColor);
+    if (selectedBrand) params.append("brand", selectedBrand);
     if (selectedPriceRange) {
-      params.append('minPrice', selectedPriceRange[0].toString());
-      params.append('maxPrice', selectedPriceRange[1].toString());
+      params.append("minPrice", selectedPriceRange[0].toString());
+      params.append("maxPrice", selectedPriceRange[1].toString());
     }
     return params.toString();
   };
@@ -60,9 +63,16 @@ function AllProducts() {
       try {
         const query = buildQueryString();
         const result = await getAll(query);
-        setData(result);
+
+        // sort sản phẩm mới nhất lên trên
+        const sorted = result.sort(
+          (a: Product, b: Product) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+
+        setData(sorted);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -71,146 +81,194 @@ function AllProducts() {
     fetchData();
   }, [selectedSize, selectedPriceRange, selectedColor, selectedBrand]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="w-12 h-12 border-4 border-gray-200 border-t-green-500 rounded-full animate-spin"></div>
+      </div>
+    );
 
   return (
-<div className="flex flex-col lg:flex-row gap-6 px-4">
-<div className="w-full lg:w-64 p-4 bg-white rounded-lg shadow space-y-6 border border-gray-200">
+    <div className="flex flex-col lg:flex-row gap-8 px-6 py-8 max-w-7xl mx-auto">
+      {/* Sidebar Filter */}
+      <aside className="w-full lg:w-67 bg-white rounded-2xl shadow-md border border-gray-100 p-6 space-y-8 h-fit">
+        <h2 className="text-lg font-bold flex items-center gap-2 text-gray-800 border-b pb-2">
+          <SlidersHorizontal size={18} className="text-green-600" />
+          Bộ lọc sản phẩm
+        </h2>
 
-    <div>
-      <h3
-        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
-        onClick={() => setShowPriceFilter(!showPriceFilter)}
-      >
-       Giá
-        <span>{showPriceFilter ? '▲' : '▼'}</span>
-      </h3>
-      {showPriceFilter && (
-        <div className="space-y-2 pl-1">
-          {[
-            { label: '100,000₫ - 1,000,000₫', min: 100000, max: 1000000 },
-            { label: '1,000,000₫ - 2,000,000₫', min: 1000000, max: 2000000 },
-            { label: '2,000,000₫ - 4,000,000₫', min: 2000000, max: 4000000 },
-            { label: 'Trên 4,000,000₫', min: 4000000, max: 1000000000 },
-          ].map((range, index) => (
-            <label key={index} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={
+        {/* Giá */}
+        <div>
+          <h3 className="flex items-center gap-2 font-semibold text-gray-700 mb-3">
+            <BadgeDollarSign size={18} className="text-green-600" />
+            Giá
+          </h3>
+          <div className="space-y-3">
+            {[
+              { label: "Dưới 1 triệu", min: 0, max: 1000000 },
+              { label: "1 - 2 triệu", min: 1000000, max: 2000000 },
+              { label: "2 - 4 triệu", min: 2000000, max: 4000000 },
+              { label: "Trên 4 triệu", min: 4000000, max: 100000000 },
+            ].map((range, index) => (
+              <label
+                key={index}
+                className={`flex items-center gap-2 border rounded-xl px-3 py-2 cursor-pointer 
+                transition-all duration-200 
+                ${
                   selectedPriceRange?.[0] === range.min &&
                   selectedPriceRange?.[1] === range.max
-                }
-                onChange={() => handlePriceChange(range.min, range.max)}
-              />
-              {range.label}
-            </label>
-          ))}
+                    ? "border-green-500 bg-green-50 font-medium"
+                    : "hover:border-green-400"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="accent-green-600"
+                  checked={
+                    selectedPriceRange?.[0] === range.min &&
+                    selectedPriceRange?.[1] === range.max
+                  }
+                  onChange={() => handlePriceChange(range.min, range.max)}
+                />
+                {range.label}
+              </label>
+            ))}
+          </div>
         </div>
-      )}
-    </div>
 
-    <div>
-      <h3
-        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
-        onClick={() => setShowSizeFilter(!showSizeFilter)}
-      >
-        Size
-        <span>{showSizeFilter ? '▲' : '▼'}</span>
-      </h3>
-      {showSizeFilter && (
-        <div className="space-y-2 pl-1">
-          {['38', '39', '40', '41', '42'].map((size) => (
-            <label key={size} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={selectedSize === size}
-                onChange={() => handleToggle(selectedSize, size, setSelectedSize)}
-              />
-              {size}
-            </label>
-          ))}
+        {/* Size */}
+        <div>
+          <h3 className="flex items-center gap-2 font-semibold text-gray-700 mb-3">
+            <Ruler size={18} className="text-green-600" />
+            Size
+          </h3>
+          <div className="grid grid-cols-3 gap-3">
+            {["38", "39", "40", "41", "42"].map((size) => (
+              <label
+                key={size}
+                className={`flex items-center justify-center border rounded-xl px-3 py-2 cursor-pointer transition-all duration-200 
+                ${
+                  selectedSize === size
+                    ? "border-green-500 bg-green-50 font-medium"
+                    : "hover:border-green-400"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="accent-green-600 hidden"
+                  checked={selectedSize === size}
+                  onChange={() => handleToggle(selectedSize, size, setSelectedSize)}
+                />
+                {size}
+              </label>
+            ))}
+          </div>
         </div>
-      )}
-    </div>
 
-
-    <div>
-      <h3
-        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
-        onClick={() => setShowColorFilter(!showColorFilter)}
-      >
-        Màu sắc
-        <span>{showColorFilter ? '▲' : '▼'}</span>
-      </h3>
-      {showColorFilter && (
-        <div className="space-y-2 pl-1">
-          {COLORS.map((color) => (
-            <label key={color.value} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={selectedColor === color.value}
-                onChange={() => handleToggle(selectedColor, color.value, setSelectedColor)}
-              />
-              {color.label}
-            </label>
-          ))}
+        {/* Màu sắc */}
+        <div>
+          <h3 className="flex items-center gap-2 font-semibold text-gray-700 mb-3">
+            <Palette size={18} className="text-green-600" />
+            Màu sắc
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {COLORS.map((color) => (
+              <label
+                key={color.value}
+                className={`flex items-center gap-2 border rounded-xl px-3 py-2 cursor-pointer transition-all duration-200 
+                ${
+                  selectedColor === color.value
+                    ? "border-green-500 bg-green-50 font-medium"
+                    : "hover:border-green-400"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="accent-green-600"
+                  checked={selectedColor === color.value}
+                  onChange={() =>
+                    handleToggle(selectedColor, color.value, setSelectedColor)
+                  }
+                />
+                {color.label}
+              </label>
+            ))}
+          </div>
         </div>
-      )}
-    </div>
 
-    <div>
-      <h3
-        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
-        onClick={() => setShowBrandFilter(!showBrandFilter)}
-      >
-        Thương hiệu
-        <span>{showBrandFilter ? '▲' : '▼'}</span>
-      </h3>
-      {showBrandFilter && (
-        <div className="space-y-2 pl-1">
-          {['Nike', 'Adidas', 'Puma', 'Converse','Vans','Reebok'].map((brand) => (
-            <label key={brand} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={selectedBrand === brand}
-                onChange={() => handleToggle(selectedBrand, brand, setSelectedBrand)}
-              />
-              {brand}
-            </label>
-          ))}
+        {/* Thương hiệu */}
+        <div>
+          <h3 className="flex items-center gap-2 font-semibold text-gray-700 mb-3">
+            <Tag size={18} className="text-green-600" />
+            Thương hiệu
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {["Nike", "Adidas", "Puma", "Converse", "Vans", "Reebok"].map(
+              (brand) => (
+                <label
+                  key={brand}
+                  className={`flex items-center gap-2 border rounded-xl px-3 py-2 cursor-pointer transition-all duration-200 
+                  ${
+                    selectedBrand === brand
+                      ? "border-green-500 bg-green-50 font-medium"
+                      : "hover:border-green-400"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    className="accent-green-600"
+                    checked={selectedBrand === brand}
+                    onChange={() =>
+                      handleToggle(selectedBrand, brand, setSelectedBrand)
+                    }
+                  />
+                  {brand}
+                </label>
+              )
+            )}
+          </div>
         </div>
-      )}
-    </div>
-  </div>
+      </aside>
 
-    {/* list sản phẩm */}
-      <div className="flex-1">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {data?.map((product) => (
-            <Link
-              to={`/product/${product._id}`}
-              key={product._id}
-              className="border border-gray-200 rounded-md p-3 flex flex-col items-center text-center shadow hover:shadow-lg transition hover:scale-105"
-            >
-              <img
-                src={product.images?.[0]}
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-md"
-              />
-              <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
-              <div className="text-sm text-gray-500">{product.origin}</div>
-              <div className="flex gap-2 items-center mt-1">
-                <div className="text-red-600 font-bold">
-                  {product.discount_price.toLocaleString()}₫
+      {/* Product List */}
+      <main className="flex-1">
+        {data && data.length > 0 ? (
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {data.map((product) => (
+              <Link
+                to={`/product/${product._id}`}
+                key={product._id}
+                className="bg-white rounded-2xl shadow-md border border-gray-100 hover:shadow-lg 
+                transition-all duration-300 hover:scale-[1.02] p-5 flex flex-col items-center text-center"
+              >
+                <div className="w-full h-48 flex items-center justify-center overflow-hidden rounded-xl bg-gray-50 mb-4">
+                  <img
+                    src={product.images?.[0]}
+                    alt={product.name}
+                    className="object-contain h-full transition-transform duration-300 hover:scale-105"
+                  />
                 </div>
-                <div className="text-gray-400 line-through text-sm">
-                  {product.price.toLocaleString()}₫
+                <h2 className="text-base font-semibold text-gray-800 truncate w-full">
+                  {product.name}
+                </h2>
+                <div className="text-sm text-gray-500">{product.origin}</div>
+                <div className="flex gap-2 items-center mt-2">
+                  <span className="bg-red-100 text-red-600 font-bold text-sm px-2 py-1 rounded-lg">
+                    {product.discount_price.toLocaleString()}₫
+                  </span>
+                  <span className="text-gray-400 line-through text-sm">
+                    {product.price.toLocaleString()}₫
+                  </span>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 text-lg">
+            Không có sản phẩm nào.
+          </p>
+        )}
+      </main>
     </div>
   );
 }
