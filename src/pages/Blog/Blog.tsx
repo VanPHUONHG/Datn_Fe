@@ -101,7 +101,7 @@ const Blog = () => {
                     to={`/blog/${post.slug}`}
                     className="text-xs font-semibold text-gray-600 hover:underline"
                   >
-                    Read More &gt;
+                    Xem Thêm &gt;
                   </Link>
                 </article>
               ))
