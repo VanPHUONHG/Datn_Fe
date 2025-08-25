@@ -91,9 +91,7 @@ const CouponEdit: React.FC = () => {
 
   if (loading)
     return (
-      <div className="p-6 text-center text-blue-500">
-        Đang tải dữ liệu...
-      </div>
+      <div className="p-6 text-center text-blue-500">Đang tải dữ liệu...</div>
     );
 
   return (
@@ -156,7 +154,6 @@ const CouponEdit: React.FC = () => {
             placeholder={
               discountType === "percent" ? "Nhập % giảm" : "Không áp dụng"
             }
-            disabled={discountType === "fixed"}
           />
           {errors.discount_value && (
             <p className="text-red-500 text-sm">
@@ -171,6 +168,12 @@ const CouponEdit: React.FC = () => {
             type="number"
             {...register("max_discount", { min: 0 })}
             className="w-full border rounded p-2"
+            placeholder={
+              discountType === "percent"
+                ? "Nhập số tiền tối đa"
+                : "Không áp dụng"
+            }
+            disabled={discountType === "fixed"} // 🔹 Disable khi là cố định
           />
         </div>
 

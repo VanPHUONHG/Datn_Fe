@@ -19,39 +19,38 @@ const CouponAdd: React.FC = () => {
   const nav = useNavigate();
 
   const {
-  register,
-  handleSubmit,
-  control,
-  watch,
-  reset,
-  formState: { errors },
-} = useForm<CouponFormInput>({
-  defaultValues: {
-    code: "",
-    discount_type: "percent",
-    discount_value: 0,
-    max_discount: 0,
-    min_purchase: 0,
-    is_active: true,
-    date_range: [dayjs(), dayjs().add(7, "day")],
-  },
-});
-
-const discountType = watch("discount_type");
-
-// Reset khi đổi loại giảm giá
-useEffect(() => {
-  reset({
-    code: "",
-    discount_type: discountType, // giữ loại mới được chọn
-    discount_value: 0,
-    max_discount: 0,
-    min_purchase: 0,
-    is_active: true,
-    date_range: [dayjs(), dayjs().add(7, "day")],
+    register,
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<CouponFormInput>({
+    defaultValues: {
+      code: "",
+      discount_type: "percent",
+      discount_value: 0,
+      max_discount: 0,
+      min_purchase: 0,
+      is_active: true,
+      date_range: [dayjs(), dayjs().add(7, "day")],
+    },
   });
-}, [discountType, reset]);
 
+  const discountType = watch("discount_type");
+
+  // Reset khi đổi loại giảm giá
+  useEffect(() => {
+    reset({
+      code: "",
+      discount_type: discountType, // giữ loại mới được chọn
+      discount_value: 0,
+      max_discount: 0,
+      min_purchase: 0,
+      is_active: true,
+      date_range: [dayjs(), dayjs().add(7, "day")],
+    });
+  }, [discountType, reset]);
 
   const onSubmit = async (data: CouponFormInput) => {
     try {
@@ -130,7 +129,6 @@ useEffect(() => {
             placeholder={
               discountType === "percent" ? "Nhập % giảm" : "Không áp dụng"
             }
-            disabled={discountType === "fixed"}
           />
           {errors.discount_value && (
             <p className="text-red-500 text-sm">
@@ -145,6 +143,12 @@ useEffect(() => {
             type="number"
             {...register("max_discount", { min: 0 })}
             className="w-full border rounded p-2"
+            placeholder={
+              discountType === "percent"
+                ? "Nhập số tiền tối đa"
+                : "Không áp dụng"
+            }
+            disabled={discountType === "fixed"} // 🔹 Disable khi là cố định
           />
         </div>
 

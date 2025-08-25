@@ -141,7 +141,7 @@ function Checkout() {
 
 
     const discountAmount = calculateDiscount();
-    const finalTotal = totalAmount + deliveryCharges - discountAmount;
+    const finalTotal = Math.max(0, totalAmount + deliveryCharges - discountAmount);
 
     const handleCheckout = async () => {
 console.log("✅ paymentMethod trước khi gửi đơn:", paymentMethod);
