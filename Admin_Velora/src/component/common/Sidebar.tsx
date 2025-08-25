@@ -8,6 +8,10 @@ import {
   GiftOutlined,
   PictureOutlined,
   MessageOutlined,
+  TagsOutlined,
+  ReadOutlined,
+  BarsOutlined,
+  CommentOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
@@ -43,9 +47,19 @@ const AdminSidebar = () => {
       ],
     },
     {
+  key: 'sub10',
+  label: 'Quản lý thuộc tính',
+  icon: <TagsOutlined  />, 
+  children: [
+    { key: 'attributelist', label: 'Danh sách thuộc tính' },
+    { key: 'addattribute', label: 'Thêm mới thuộc tính' },
+  ],
+},
+
+    {
       key: 'sub7',
       label: 'Quản lý blog',
-      icon: <FolderOutlined />,
+      icon: <ReadOutlined  />,
       children: [
         { key: 'blog-list', label: 'Danh sách blog' },
         { key: 'blog-add', label: 'Thêm blog' },
@@ -54,7 +68,7 @@ const AdminSidebar = () => {
     {
       key: "sub15",
       label: "Quản lý danh mục blog",
-      icon: <FolderOutlined />,
+      icon: <BarsOutlined />,
       children: [
         { key: "blog-category-list", label: "Danh sách danh mục blog" },
         { key: "blog-category-add", label: "Thêm danh mục blog" },
@@ -107,7 +121,7 @@ const AdminSidebar = () => {
     {
       key: "sub16",
       label: "Quản lý bình luận",
-      icon: <FolderOutlined />,
+      icon: <CommentOutlined  />,
       children: [
         { key: "reviewlist", label: "Danh sách bình luận" },
       ],
@@ -136,6 +150,12 @@ const AdminSidebar = () => {
       case 'addvariant':
         navigate('/admin/variant-add');
         break;
+      case 'attributelist':
+        navigate('/admin/attribute-list');
+        break;  
+      case 'addattribute':
+        navigate('/admin/attribute-add');
+        break;    
       case 'categorylist':
         navigate('/admin/category-list');
         break;

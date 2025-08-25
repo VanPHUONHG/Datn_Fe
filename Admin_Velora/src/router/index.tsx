@@ -51,6 +51,10 @@ import BannerAdd from "pages/Banner/BannerAdd";
 import BannerEdit from "pages/Banner/BannerEdit";
 import Chat from "pages/Chat/Chat";
 import UserDelete from "pages/Account/UserDelete";
+import AttributeList from "pages/Attribute/AttributeList";
+import AttributeAdd from "pages/Attribute/AttributeAdd";
+import AttributeEdit from "pages/Attribute/AttributeEdit";
+import AttributeDelete from "pages/Attribute/AttributeDelete";
 
 export const router = createBrowserRouter([
   {
@@ -89,6 +93,12 @@ export const router = createBrowserRouter([
       { path: "variant-add", element: <VariantAdd /> },
       { path: "variant-edit/:id", element: <VariantEdit /> },
       { path: "variant-delete", element: <VariantDelete /> },
+
+        // Attribute
+      { path: "attribute-list", element: <AttributeList /> },
+      { path: "attribute-add", element: <AttributeAdd /> },
+      { path: "attribute-edit/:id", element: <AttributeEdit /> },
+      { path: "attribute-delete", element: <AttributeDelete /> },
 
       // Blog
       { path: "blog-list", element: <BlogList /> },
