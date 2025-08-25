@@ -36,28 +36,18 @@ export const deleteReview = async (review_id: string) => {
 };
 
 
-export const replyToReview = async ({
-  product_id,
-  comment,
-  parent_id,
-}: {
-  product_id: string;
-  comment: string;
-  parent_id: string;
-}) => {
+export const adminReplyReview = async (review_id: string, comment: string) => {
   const token = localStorage.getItem("token_admin");
   if (!token) throw new Error("Không tìm thấy token admin");
 
   const res = await axios.post(
-    `${REVIEW_ENDPOINT}/addreview/${product_id}`,
-    { comment, parent_id },
+    `${REVIEW_ENDPOINT}/${review_id}/reply`,
+    { comment },
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     }
   );
 
-  return res.data.review;
+  return res.data.reply;
 };
 
