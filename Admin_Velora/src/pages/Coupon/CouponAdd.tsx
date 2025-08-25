@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { message, Switch, Select, DatePicker } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,10 @@ import dayjs, { Dayjs } from "dayjs";
 
 const { RangePicker } = DatePicker;
 
-type CouponFormInput = Omit<ICoupon, "_id" | "createdAt" | "updatedAt" | "start_date" | "end_date"> & {
+type CouponFormInput = Omit<
+  ICoupon,
+  "_id" | "createdAt" | "updatedAt" | "start_date" | "end_date"
+> & {
   date_range: [Dayjs, Dayjs];
 };
 
@@ -16,21 +19,39 @@ const CouponAdd: React.FC = () => {
   const nav = useNavigate();
 
   const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<CouponFormInput>({
-    defaultValues: {
-      code: "",
-      discount_type: "percent",
-      discount_value: 0,
-      max_discount: 0,
-      min_purchase: 0,
-      is_active: true,
-      date_range: [dayjs(), dayjs().add(7, "day")],
-    },
+  register,
+  handleSubmit,
+  control,
+  watch,
+  reset,
+  formState: { errors },
+} = useForm<CouponFormInput>({
+  defaultValues: {
+    code: "",
+    discount_type: "percent",
+    discount_value: 0,
+    max_discount: 0,
+    min_purchase: 0,
+    is_active: true,
+    date_range: [dayjs(), dayjs().add(7, "day")],
+  },
+});
+
+const discountType = watch("discount_type");
+
+// Reset khi đổi loại giảm giá
+useEffect(() => {
+  reset({
+    code: "",
+    discount_type: discountType, // giữ loại mới được chọn
+    discount_value: 0,
+    max_discount: 0,
+    min_purchase: 0,
+    is_active: true,
+    date_range: [dayjs(), dayjs().add(7, "day")],
   });
+}, [discountType, reset]);
+
 
   const onSubmit = async (data: CouponFormInput) => {
     try {
@@ -54,7 +75,10 @@ const CouponAdd: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-xl">
       <h2 className="text-3xl font-bold mb-8 text-center">Thêm mã giảm giá</h2>
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div>
           <label className="block font-semibold mb-1">Mã khuyến mãi</label>
           <input
@@ -62,7 +86,9 @@ const CouponAdd: React.FC = () => {
             className="w-full border rounded p-2"
             placeholder="Nhập mã"
           />
-          {errors.code && <p className="text-red-500 text-sm">{errors.code.message}</p>}
+          {errors.code && (
+            <p className="text-red-500 text-sm">{errors.code.message}</p>
+          )}
         </div>
 
         <div>
@@ -88,10 +114,29 @@ const CouponAdd: React.FC = () => {
           <label className="block font-semibold mb-1">Giá trị giảm</label>
           <input
             type="number"
-            {...register("discount_value", { required: true, min: 0 })}
+            {...register("discount_value", {
+              required:
+                discountType === "percent" ? "Không được để trống" : false,
+              min:
+                discountType === "percent"
+                  ? { value: 1, message: "Phải ≥ 1%" }
+                  : undefined,
+              max:
+                discountType === "percent"
+                  ? { value: 100, message: "Không được vượt quá 100%" }
+                  : undefined,
+            })}
             className="w-full border rounded p-2"
+            placeholder={
+              discountType === "percent" ? "Nhập % giảm" : "Không áp dụng"
+            }
+            disabled={discountType === "fixed"}
           />
-          {errors.discount_value && <p className="text-red-500 text-sm">Giá trị không hợp lệ</p>}
+          {errors.discount_value && (
+            <p className="text-red-500 text-sm">
+              {errors.discount_value.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -104,7 +149,9 @@ const CouponAdd: React.FC = () => {
         </div>
 
         <div>
-          <label className="block font-semibold mb-1">Giá trị mua tối thiểu</label>
+          <label className="block font-semibold mb-1">
+            Giá trị mua tối thiểu
+          </label>
           <input
             type="number"
             {...register("min_purchase", { min: 0 })}
@@ -113,7 +160,9 @@ const CouponAdd: React.FC = () => {
         </div>
 
         <div>
-          <label className="block font-semibold mb-1">Khoảng thời gian áp dụng</label>
+          <label className="block font-semibold mb-1">
+            Khoảng thời gian áp dụng
+          </label>
           <Controller
             name="date_range"
             control={control}
@@ -127,7 +176,9 @@ const CouponAdd: React.FC = () => {
               />
             )}
           />
-          {errors.date_range && <p className="text-red-500 text-sm">Vui lòng chọn ngày</p>}
+          {errors.date_range && (
+            <p className="text-red-500 text-sm">Vui lòng chọn ngày</p>
+          )}
         </div>
 
         <div className="md:col-span-2">
