@@ -190,12 +190,12 @@ const handleReply = async (parentId: string) => {
         <table className="min-w-full bg-white text-sm rounded-lg overflow-hidden">
           <thead className="bg-gradient-to-r from-blue-100 to-green-100 text-gray-700 font-semibold">
             <tr>
-              <th className="px-4 py-3 border">STT</th>
-              <th className="px-4 py-3 border">Người bình luận</th>
-              <th className="px-4 py-3 border">Sản phẩm</th>
-              <th className="px-4 py-3 border">Nội dung</th>
-              <th className="px-4 py-3 border">Thời gian</th>
-              <th className="px-4 py-3 border">Thao tác</th>
+              <th className="px-4 py-3 border text-center">STT</th>
+              <th className="px-4 py-3 border text-center">Người bình luận</th>
+              <th className="px-4 py-3 border text-center">Sản phẩm</th>
+              <th className="px-4 py-3 border text-center">Nội dung</th>
+              <th className="px-4 py-3 border text-center">Thời gian</th>
+              <th className="px-4 py-3 border text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -204,18 +204,18 @@ const handleReply = async (parentId: string) => {
               .map((parent, i) => (
                 <React.Fragment key={parent._id}>
                   {/* Bình luận gốc */}
-                  <tr className="hover:bg-blue-50 transition text-center border-t">
-                    <td className="border px-4 py-3 font-bold">{i + 1}</td>
-                    <td className="border px-4 py-3 font-semibold text-blue-700">
+                  <tr className="hover:bg-blue-50 transition border-t">
+                    <td className="border px-4 py-3 font-bold text-center">{i + 1}</td>
+                    <td className="border px-4 py-3 font-semibold text-blue-700 text-center">
                       {parent.user_name}
                     </td>
-                    <td className="border px-4 py-3">
+                    <td className="border px-4 py-3 text-center">
                       {parent.product_id?.name || "N/A"}
                     </td>
-                    <td className="border px-4 py-3 text-left">
+                    <td className="border px-4 py-3 text-left align-middle">
                       {parent.comment}
                     </td>
-                    <td className="border px-4 py-3 text-xs">
+                    <td className="border px-4 py-3 text-xs text-center">
                       {dayjs(parent.createdAt).format("DD/MM/YYYY")}
                     </td>
                     <td className="border px-4 py-3 flex gap-2 justify-center items-center">
@@ -268,21 +268,21 @@ const handleReply = async (parentId: string) => {
                     .map((child) => (
                       <tr
                         key={child._id}
-                        className="bg-green-50 hover:bg-green-100 transition text-left"
+                        className="bg-green-50 hover:bg-green-100 transition"
                       >
-                        <td className="border px-4 py-3 text-center text-green-600 font-bold">
+                        <td className="border px-4 py-3 text-center text-green-600 font-bold align-middle">
                           ↳
                         </td>
-                        <td className="border px-4 py-3 font-semibold text-green-700">
+                        <td className="border px-4 py-3 font-semibold text-green-700 text-center align-middle">
                           {child.user_name}
                         </td>
-                        <td className="border px-4 py-3" colSpan={2}>
+                        <td className="border px-4 py-3 text-center align-middle" colSpan={2}>
                           {child.comment}
                         </td>
-                        <td className="border px-4 py-3 text-xs">
+                        <td className="border px-4 py-3 text-xs text-center align-middle">
                           {dayjs(child.createdAt).format("DD/MM/YYYY")}
                         </td>
-                        <td className="border px-4 py-3 text-center">
+                        <td className="border px-4 py-3 text-center align-middle">
                           <button
                             onClick={() => handleDelete(child._id)}
                             className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 shadow transition"
