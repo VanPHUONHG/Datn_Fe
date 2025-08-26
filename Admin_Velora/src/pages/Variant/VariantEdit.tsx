@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   getVariantById,
   updateVariant,
+  getVariantsByProduct,
 } from "services/variant/variant.service";
 import { getAllProducts } from "services/product/product.service";
 import type { Product } from "types/product";
@@ -38,6 +39,7 @@ const VariantEdit = () => {
 
   const [sizes, setSizes] = useState<{ _id: string; value: string }[]>([]);
   const [colors, setColors] = useState<{ _id: string; value: string }[]>([]);
+  const [variantsByProduct, setVariantsByProduct] = useState<IProductVariant[]>([]);
 
   useEffect(() => {
     const fetchAttributes = async () => {
@@ -98,7 +100,9 @@ const VariantEdit = () => {
           getVariantById(id as string),
           getAllProducts(),
         ]);
-
+        // Lấy biến thể cùng sản phẩm
+        const res = await getVariantsByProduct({ product_id: variant.product_id._id || variant.product_id, limit: 100 });
+        setVariantsByProduct(res.variants?.filter((v: IProductVariant) => v._id !== id) || []);
         const formData: VariantFormInput = {
           product_id:
             typeof variant.product_id === "object"
@@ -158,6 +162,22 @@ const VariantEdit = () => {
           .split(",")
           .map((url) => url.trim())
           .filter((url) => url.startsWith("http"));
+      }
+
+      // ✅ Check: không cho trùng size trong cùng 1 màu của sản phẩm
+      const duplicate = variantsByProduct.find((variant) => {
+        const colorId = typeof variant.color === "string" ? variant.color : variant.color?._id;
+        const sizeId = typeof variant.size === "string" ? variant.size : variant.size?._id;
+        const productId = typeof variant.product_id === "string" ? variant.product_id : variant.product_id?._id;
+        return (
+          colorId === colors.find((c) => c.value === data.color)?._id &&
+          sizeId === sizes.find((s) => s.value === data.size)?._id &&
+          productId === data.product_id
+        );
+      });
+      if (duplicate) {
+        message.error("Biến thể này (cùng màu + cùng size) đã tồn tại cho sản phẩm này");
+        return;
       }
 
       const updatedData = {
