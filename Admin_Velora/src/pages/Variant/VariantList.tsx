@@ -76,10 +76,14 @@ useEffect(() => {
   // Lọc biến thể theo điều kiện đã nhập
 const filteredVariants = variants.filter((item) => {
   const skuMatch = item.sku?.toLowerCase().includes(searchSku.toLowerCase());
-  const sizeMatch = filterSize ? item.size === filterSize : true;
 const colorMatch = filterColor
-  ? item.color?.toLowerCase() === filterColor.toLowerCase()
+  ? item.color?.value.toLowerCase() === filterColor.toLowerCase()
   : true;
+
+const sizeMatch = filterSize
+  ? item.size?.value.toLowerCase() === filterSize.toLowerCase()
+  : true;
+
     const priceMatch =
     (minPrice === undefined || item.price >= minPrice) &&
     (maxPrice === undefined || item.price <= maxPrice);
@@ -203,8 +207,8 @@ const totalPages = Math.ceil(filteredVariants.length / perPage);
                 <td className=" px-4 py-2">{(page - 1) * perPage + index + 1}</td>
 <td className=" px-4 py-2">{(item.product_id as { name?: string })?.name || "Không có"}</td>
                 <td className=" px-4 py-2">{item.sku}</td>
-                <td className=" px-4 py-2">{item.size}</td>
-                <td className=" px-4 py-2">{item.color}</td>
+        <td>{item.size?.value || "—"}</td>
+<td>{item.color?.value || "—"}</td>
                 <td className=" px-4 py-2">
                   <img
                     src={item.image}

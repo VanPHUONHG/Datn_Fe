@@ -4,8 +4,8 @@ export interface IProductVariant {
     _id: string;
     name: string;
   } | string; // populate hoặc chỉ là ObjectId string
-  size: string;
-  color: string;
+  size: string | { _id: string; name: string };
+  color: string | { _id: string; name: string };
   image: string;
   images: string[];
   sku: string;

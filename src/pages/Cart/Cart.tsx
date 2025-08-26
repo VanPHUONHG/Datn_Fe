@@ -199,7 +199,33 @@ setCart({
       }
       return;
     }
-    navigate("/checkout", { state: { selectedItems, user: userData, isFromCart: true } });
+    
+const sanitizedItems = selectedItems.map(item => {
+  const product = typeof item.product !== "string" ? item.product : null;
+  const variant = typeof item.variant !== "string" ? item.variant : null;
+
+const color =
+  typeof variant?.color === "object"
+    ? (variant.color as { value: string }).value
+    : variant?.color || "Không rõ";
+
+const size =
+  typeof variant?.size === "object"
+    ? (variant.size as { value: string }).value
+    : variant?.size || "Không rõ";
+
+  return {
+    ...item,
+    product,
+    variant: {
+      ...variant,
+      color,
+      size
+    }
+  };
+});
+
+navigate("/checkout", { state: { selectedItems: sanitizedItems, user: userData, isFromCart: true } });
   };
 
   const calculateSummary = () => {
@@ -271,8 +297,9 @@ const displayedProducts = showAll ? viewedProducts : viewedProducts.slice(0, 5);
                 const price = variant?.discount_price || variant?.price || product?.price || 0;
                 const image = variant?.image || product?.images?.[0] || "/no-image.png";
                 const name = product?.name || "Không rõ";
-                const color = variant?.color || "Không rõ";
-                const size = variant?.size || "Không rõ";
+        const color = typeof variant?.color === "object" ? (variant.color as any).value : variant?.color || "Không rõ";
+const size = typeof variant?.size === "object" ? (variant.size as any).value : variant?.size || "Không rõ";
+
 
                 return (
                   <tr key={key} className="border-t">

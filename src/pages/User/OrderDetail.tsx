@@ -94,7 +94,9 @@ const OrderDetail = () => {
                                         <img src={item.productImage} alt={item.productName} className="w-16 h-16 object-cover rounded mx-auto" />
                                     </td>
                                     <td className="p-3 border border-green-100 text-left">{item.productName}</td>
-                                    <td className="p-3 border border-green-100">{item.variant.color} / {item.variant.size}</td>
+<td className="p-3 border border-green-100">
+  {item.variant.color || "Không rõ"} / {item.variant.size || "Không rõ"}
+</td>
                                     <td className="p-3 border border-green-100 text-green-600 font-semibold">
                                         {item.price.toLocaleString()} đ
                                     </td>

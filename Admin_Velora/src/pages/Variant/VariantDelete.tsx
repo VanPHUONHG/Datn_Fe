@@ -8,12 +8,30 @@ import {
 } from "services/variant/variant.service";
 import type { IProductVariant } from "types/variant";
 import { DeleteOutlined, RollbackOutlined } from "@ant-design/icons";
+import { getAttributes } from "services/attribute/attribute.service";
 
 const VariantDelete = () => {
   const [variants, setVariants] = useState<IProductVariant[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const perPage = 5;
+
+const [sizes, setSizes] = useState<{ _id: string; value: string }[]>([]);
+const [colors, setColors] = useState<{ _id: string; value: string }[]>([]);
+
+useEffect(() => {
+  const fetchAttributes = async () => {
+    try {
+      const sizeData = await getAttributes("size");
+      const colorData = await getAttributes("color");
+      setSizes(sizeData);
+      setColors(colorData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  fetchAttributes();
+}, []);
 
   const fetchDeletedVariants = async (pageNumber = page) => {
     try {
@@ -112,8 +130,13 @@ const VariantDelete = () => {
                     {(item.product_id as any)?.name || "Không có"}
                   </td>
                   <td className=" px-4 py-2">{item.sku}</td>
-                  <td className=" px-4 py-2">{item.size}</td>
-                  <td className=" px-4 py-2">{item.color}</td>
+               <td className="px-4 py-2">
+  {sizes.find((s) => s._id === item.size)?.value || "Không có"}
+</td>
+<td className="px-4 py-2">
+  {colors.find((c) => c._id === item.color)?.value || "Không có"}
+</td>
+
                   <td className=" px-4 py-2">
                     <img
                       src={item.image}
