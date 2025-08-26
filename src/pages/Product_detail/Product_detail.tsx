@@ -431,7 +431,7 @@ useEffect(() => {
                 <span className="text-sm text-gray-700">Kích cỡ:</span>
                 <div className="flex gap-2 flex-wrap mt-1">
                   {variants.filter(v => v.color?.value === selectedColor)
-                    .sort((a, b) => Number(a.size) - Number(b.size))
+                    .sort((a, b) => Number(a.size?.value) - Number(b.size?.value))
                     .map((variant) => {
                       const isOutOfStock = variant.stock_quantity === 0;
                       const isSelected = selectedVariant?._id === variant._id;
