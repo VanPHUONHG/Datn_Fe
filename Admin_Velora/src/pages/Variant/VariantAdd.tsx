@@ -102,75 +102,93 @@ const VariantAdd = () => {
   };
 
   const onSubmit = async (data: VariantFormInput) => {
-    let thumbnailUrl = thumbnailUrlInput;
-    let images: string[] = [];
+  let thumbnailUrl = thumbnailUrlInput;
+  let images: string[] = [];
 
-    if (thumbnailFile) {
-      try {
-        thumbnailUrl = await uploadImage(thumbnailFile);
-      } catch {
-        message.error("Lỗi upload ảnh đại diện");
-        return;
-      }
-    }
-
-    if (imageFiles.length > 0) {
-      try {
-        images = await Promise.all(imageFiles.map(uploadImage));
-      } catch {
-        message.error("Lỗi upload ảnh phụ");
-        return;
-      }
-    } else if (imageUrlsInput) {
-      images = imageUrlsInput
-        .split(",")
-        .map((url) => url.trim())
-        .filter((url) => url.startsWith("http"));
-    }
-
-    // Nếu chưa có ảnh thì lấy lại từ biến thể cùng màu
-    const matchedVariant = variantsByProduct.find((variant) => {
-      const colorId = typeof variant.color === "string" ? variant.color : variant.color?._id;
-      const productId = typeof variant.product_id === "string" ? variant.product_id : variant.product_id?._id;
-      return colorId === data.color && productId === data.product_id;
-    });
-
-   if (!matchedVariant) {
-  // Màu mới → phải upload ảnh hoặc có link
-  if (!thumbnailFile && !thumbnailUrlInput) {
-    message.error("Màu mới phải có ảnh đại diện");
-    return;
-  }
-  if (imageFiles.length === 0 && !imageUrlsInput.trim()) {
-    message.error("Màu mới phải có ít nhất một ảnh phụ");
-    return;
-  }
-}
-
-    const variantData = {
-      ...data,
-      image: thumbnailUrl,
-      images,
-    };
-
+  if (thumbnailFile) {
     try {
-      await createVariant(variantData);
-      message.success("Thêm biến thể thành công");
-      nav("/admin/variant-list");
-    } catch (error: any) {
-      const errorMsg = error?.response?.data?.message || "Đã xảy ra lỗi";
-      const rawError = error?.response?.data?.error || "";
-
-      if (
-        (errorMsg.includes("duplicate key") || rawError.includes("E11000")) &&
-        rawError.includes("sku")
-      ) {
-        setError("sku", { type: "manual", message: "SKU đã tồn tại." });
-        return;
-      }
-      message.error(errorMsg);
+      thumbnailUrl = await uploadImage(thumbnailFile);
+    } catch {
+      message.error("Lỗi upload ảnh đại diện");
+      return;
     }
+  }
+
+  if (imageFiles.length > 0) {
+    try {
+      images = await Promise.all(imageFiles.map(uploadImage));
+    } catch {
+      message.error("Lỗi upload ảnh phụ");
+      return;
+    }
+  } else if (imageUrlsInput) {
+    images = imageUrlsInput
+      .split(",")
+      .map((url) => url.trim())
+      .filter((url) => url.startsWith("http"));
+  }
+
+  // ✅ Check: không cho trùng size trong cùng 1 màu của sản phẩm
+  const duplicate = variantsByProduct.find((variant) => {
+    const colorId = typeof variant.color === "string" ? variant.color : variant.color?._id;
+    const sizeId = typeof variant.size === "string" ? variant.size : variant.size?._id;
+    const productId = typeof variant.product_id === "string" ? variant.product_id : variant.product_id?._id;
+    return (
+      colorId === data.color &&
+      sizeId === data.size &&
+      productId === data.product_id
+    );
+  });
+
+  if (duplicate) {
+    message.error("Biến thể này (cùng màu + cùng size) đã tồn tại cho sản phẩm này");
+    return;
+  }
+
+  // Nếu chưa có ảnh thì lấy lại từ biến thể cùng màu
+  const matchedVariant = variantsByProduct.find((variant) => {
+    const colorId = typeof variant.color === "string" ? variant.color : variant.color?._id;
+    const productId = typeof variant.product_id === "string" ? variant.product_id : variant.product_id?._id;
+    return colorId === data.color && productId === data.product_id;
+  });
+
+  if (!matchedVariant) {
+    // Màu mới → phải upload ảnh hoặc có link
+    if (!thumbnailFile && !thumbnailUrlInput) {
+      message.error("Màu mới phải có ảnh đại diện");
+      return;
+    }
+    if (imageFiles.length === 0 && !imageUrlsInput.trim()) {
+      message.error("Màu mới phải có ít nhất một ảnh phụ");
+      return;
+    }
+  }
+
+  const variantData = {
+    ...data,
+    image: thumbnailUrl,
+    images,
   };
+
+  try {
+    await createVariant(variantData);
+    message.success("Thêm biến thể thành công");
+    nav("/admin/variant-list");
+  } catch (error: any) {
+    const errorMsg = error?.response?.data?.message || "Đã xảy ra lỗi";
+    const rawError = error?.response?.data?.error || "";
+
+    if (
+      (errorMsg.includes("duplicate key") || rawError.includes("E11000")) &&
+      rawError.includes("sku")
+    ) {
+      setError("sku", { type: "manual", message: "SKU đã tồn tại." });
+      return;
+    }
+    message.error(errorMsg);
+  }
+};
+
 
   const inputClass =
     "w-full border border-gray-300 rounded-lg p-3 text-base focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all duration-300 ease-in-out hover:border-green-400";
