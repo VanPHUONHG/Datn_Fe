@@ -33,7 +33,19 @@ const OrderDetail = () => {
         addressLine: '',
         note: '',
     });
+    const [errors, setErrors] = useState<{ name?: string; phone?: string; addressLine?: string }>({});
+
+const validateForm = () => {
+  const newErrors: typeof errors = {};
+  if (!formData.name.trim()) newErrors.name = "Tên không được để trống";
+  if (!formData.phone.trim()) newErrors.phone = "SĐT không được để trống";
+  if (!formData.addressLine.trim()) newErrors.addressLine = "Địa chỉ không được để trống";
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
     const handleSave = async () => {
+         if (!validateForm()) return;
         try {
             if (!order) return;
 
@@ -117,30 +129,36 @@ const OrderDetail = () => {
                         <div className="space-y-2">
                             {editMode ? (
                                 <>
-                                    <div>
-                                        <label className="font-semibold">Người nhận:</label>
-                                        <input
-                                            className="border w-full p-1 rounded"
-                                            value={formData.name}
-                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="font-semibold">SĐT:</label>
-                                        <input
-                                            className="border w-full p-1 rounded"
-                                            value={formData.phone}
-                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="font-semibold">Địa chỉ:</label>
-                                        <input
-                                            className="border w-full p-1 rounded"
-                                            value={formData.addressLine}
-                                            onChange={(e) => setFormData({ ...formData, addressLine: e.target.value })}
-                                        />
-                                    </div>
+                                 <div>
+  <label className="font-semibold">Người nhận:</label>
+  <input
+    className="border w-full p-1 rounded"
+    value={formData.name}
+    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+  />
+  {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+</div>
+
+<div>
+  <label className="font-semibold">SĐT:</label>
+  <input
+    className="border w-full p-1 rounded"
+    value={formData.phone}
+    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+  />
+  {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+</div>
+
+<div>
+  <label className="font-semibold">Địa chỉ:</label>
+  <input
+    className="border w-full p-1 rounded"
+    value={formData.addressLine}
+    onChange={(e) => setFormData({ ...formData, addressLine: e.target.value })}
+  />
+  {errors.addressLine && <p className="text-red-500 text-sm">{errors.addressLine}</p>}
+</div>
+
                                 </>
                             ) : (
                                 <>
