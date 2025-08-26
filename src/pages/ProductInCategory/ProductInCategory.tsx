@@ -250,7 +250,7 @@ const ProductInCategory = () => {
                     className="object-contain h-full transition-transform duration-300 hover:scale-105"
                   />
                 </div>
-                <h2 className="text-base font-semibold text-gray-800 truncate w-full">
+                <h2 className="text-base font-semibold text-gray-800 w-full">
                   {product.name}
                 </h2>
                 <div className="text-sm text-gray-500">{product.origin}</div>

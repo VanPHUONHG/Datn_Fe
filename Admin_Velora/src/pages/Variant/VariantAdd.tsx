@@ -164,11 +164,24 @@ const VariantAdd = () => {
     }
   }
 
-  const variantData = {
-    ...data,
-    image: thumbnailUrl,
-    images,
-  };
+// Nếu đã có biến thể cùng màu → fallback ảnh cũ khi không upload
+let finalThumbnail = thumbnailUrl;
+let finalImages = images;
+
+if (matchedVariant) {
+  if (!thumbnailFile && !thumbnailUrlInput) {
+    finalThumbnail = matchedVariant.image; // fallback thumbnail
+  }
+if (finalImages.length === 0 && matchedVariant.images?.length > 0) {
+      finalImages = matchedVariant.images; // fallback images
+    }
+}
+
+const variantData = {
+  ...data,
+  image: finalThumbnail,
+  images: finalImages,
+};
 
   try {
     await createVariant(variantData);

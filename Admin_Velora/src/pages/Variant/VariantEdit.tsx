@@ -138,6 +138,15 @@ const VariantEdit = () => {
     let images: string[] = [];
 
     try {
+       // ✅ Check SKU trùng
+    const isSkuDuplicate = variantsByProduct.some(
+      (v) => v.sku === data.sku && v._id !== id
+    );
+    if (isSkuDuplicate) {
+      message.error("Mã SKU đã tồn tại cho sản phẩm này, vui lòng chọn mã khác");
+      return;
+    }
+    
       // Upload thumbnail nếu có file mới
       if (thumbnailFile) {
         thumbnailUrl = await uploadImage(thumbnailFile);
