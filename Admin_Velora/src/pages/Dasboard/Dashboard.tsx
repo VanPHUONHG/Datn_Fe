@@ -74,7 +74,18 @@ useEffect(() => {
       const mapped = res.map((item: any) => ({
         day: item._id,
         revenue: item.revenue,
-      }));
+      }))
+       .sort((a: RevenueItem, b: RevenueItem) => {
+    // Tách "dd/MM"
+    const [dayA, monthA] = a.day.split("/").map(Number);
+    const [dayB, monthB] = b.day.split("/").map(Number);
+
+    // Tạo Date với năm hiện tại (hoặc có thể lấy từ backend nếu có)
+    const dateA = new Date(2025, monthA - 1, dayA);
+    const dateB = new Date(2025, monthB - 1, dayB);
+
+    return dateA.getTime() - dateB.getTime();
+  });
       setRevenueData(mapped);
     } catch (err) {
       console.error("Lỗi khi lấy doanh thu:", err);
