@@ -42,23 +42,41 @@ const Compare = () => {
     fetchDetails();
   }, [selectedVariantIds]);
 
-  const renderValue = (v: IProductVariant | null, key: keyof IProductVariant) => {
-    if (!v) return "-";
-    if (key === "price") {
-      return v.discount_price ? (
-        <>
-          <span className="line-through text-red-400 mr-2">{v.price.toLocaleString()}₫</span>
-          <span className="text-green-500">{v.discount_price.toLocaleString()}₫</span>
-        </>
-      ) : (
-        <span>{v.price.toLocaleString()}₫</span>
-      );
-    }
-    if (key === "product_id") {
-      return typeof v.product_id === "object" ? v.product_id.name : "";
-    }
-    return v[key];
-  };
+const renderValue = (v: IProductVariant | null, key: keyof IProductVariant) => {
+  if (!v) return "-";
+
+  if (key === "price") {
+    return v.discount_price ? (
+      <>
+        <span className="line-through text-red-400 mr-2">
+          {v.price.toLocaleString()}₫
+        </span>
+        <span className="text-green-500">
+          {v.discount_price.toLocaleString()}₫
+        </span>
+      </>
+    ) : (
+      <span>{v.price.toLocaleString()}₫</span>
+    );
+  }
+
+  if (key === "color") {
+    return typeof v.color === "object" ? v.color?.value : v.color ?? "-";
+  }
+
+  if (key === "size") {
+    return typeof v.size === "object" ? v.size?.value : v.size ?? "-";
+  }
+
+  if (key === "product_id") {
+    return typeof v.product_id === "object"
+      ? (v.product_id as any)?.name || "-"
+      : v.product_id;
+  }
+
+  return v[key] ?? "-";
+};
+
 
 const lastToastTimeRef = useRef<number>(0);
 
@@ -106,9 +124,9 @@ const handleAddToCart = async (variantId?: string, productId?: string) => {
               >
                 <option value="">-- Chọn sản phẩm --</option>
                 {products.map((p) => (
-                  <option key={p._id} value={p._id}>
-                    {p.name}
-                  </option>
+            <option key={p._id} value={p._id}>
+  {typeof p.name === "object" ? p.name?.name || "-" : p.name}
+</option>
                 ))}
               </select>
 
@@ -121,11 +139,12 @@ const handleAddToCart = async (variantId?: string, productId?: string) => {
                     className="w-full border rounded px-3 py-2"
                   >
                     <option value="">-- Chọn biến thể --</option>
-                    {variants.map((v) => (
-                      <option key={v._id} value={v._id}>
-                        {v.color} - {v.size}
-                      </option>
-                    ))}
+                {variants.map((v) => (
+  <option key={v._id} value={v._id}>
+    {typeof v.color === "object" ? v.color?.value : v.color} -{" "}
+    {typeof v.size === "object" ? v.size?.value : v.size}
+  </option>
+))}
                   </select>
                 </>
               )}
